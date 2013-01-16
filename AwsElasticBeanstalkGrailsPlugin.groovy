@@ -10,13 +10,10 @@ class AwsElasticBeanstalkGrailsPlugin {
         "grails-app/views/error.gsp"
     ]
 
-    // TODO Fill in these fields
-    def title = "Aws Elastic Beanstalk Plugin" // Headline display name of the plugin
+    def title = "AWS Elastic Beanstalk Integration" // Headline display name of the plugin
     def author = "Kenneth Liu"
     def authorEmail = "ken.liu@gmail.com"
-    def description = '''\
-Deploy to AWS Elastic Beanstalk
-'''
+    def description = '''AWS Elastic Beanstalk Integration'''
 
     // URL to the plugin's documentation
     def documentation = "http://grails.org/plugin/aws-elastic-beanstalk"
@@ -36,7 +33,7 @@ Deploy to AWS Elastic Beanstalk
 //    def issueManagement = [ system: "JIRA", url: "http://jira.grails.org/browse/GPMYPLUGIN" ]
 
     // Online location of the plugin's browseable source code.
-    def scm = [ url: "https://github.com/kenliu/grails-aws-elastic-beanstalk-plugin" ]
+    def scm = [ url: "https://github.com/kenliu/grails-elastic-beanstalk" ]
 
     def doWithWebDescriptor = { xml ->
         // TODO Implement additions to web.xml (optional), this event occurs before
