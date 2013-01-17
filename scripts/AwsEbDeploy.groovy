@@ -26,19 +26,7 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
 
     //TODO optionally set region here
 
-    //upload the WAR file to S3 bucket
-    println "Finding S3 bucket to upload WAR"
-    String bucketName = elasticBeanstalk.createStorageLocation().getS3Bucket()
-    println "S3 bucket name: ${bucketName}"
-    def uploadFilename = uniqueTempWarFileName(appWarFile)
-
-    println "Uploading WAR file: ${uploadFilename}"
-    String key = URLEncoder.encode(uploadFilename, 'UTF-8')
-
-    println "Uploading WAR to S3"
-    AmazonS3 s3 = new AmazonS3Client(credentials)
-    def s3Result = s3.putObject(bucketName, key, appWarFile)
-    println "Uploaded WAR $s3Result.versionId"
+    uploadWarToS3()
 
     //TODO handle case where application does not yet exist - check application? (don't want to autocreate - disable autocreate flag?)
     //TODO handle case where target environment does not yet exist - check environment?
@@ -67,11 +55,15 @@ setDefaultTarget(main)
 
 
 private String getApplicationName() {
-    config.grails?.plugin?.awsElasticBeanstalk?.applicationName ?: metadata.'app.name'
+    def name = config.grails?.plugin?.awsElasticBeanstalk?.applicationName 
+    if (!name) name = System.getProperty('awsElasticBeanstalk.applicationName')
+    name ?: metadata.'app.name'
 }
 
 private String getEnvironmentName() {
-    config.grails?.plugin?.awsElasticBeanstalk?.environmentName ?: metadata.'app.name' + '-default' //the name of the default environment used in the AWS Console
+    def name = config.grails?.plugin?.awsElasticBeanstalk?.environmentName
+    if (!name) name = System.getProperty('awsElasticBeanstalk.environmentName')
+    name ?: metadata.'app.name' + '-default' //the name of the default environment used in the AWS Console
     //FIXME this should be unique to account - needs to be truncated? - appname must be between 4 and 23 chars long
 }
 
@@ -99,7 +91,22 @@ private String getWarTimestamp(File warFile) {
     warDate.format('yyyy-MM-dd_HH-mm-ss') //same as Jenkins BUILD_ID format
 }
 
-private uploadToS3() {}
+private uploadWarToS3() {
+    println "Finding S3 bucket to upload WAR"
+
+    //TODO log bucket creation
+    String bucketName = elasticBeanstalk.createStorageLocation().getS3Bucket()
+    println "S3 bucket name: ${bucketName}"
+    def uploadFilename = uniqueTempWarFileName(appWarFile)
+
+    println "Uploading WAR file: ${uploadFilename}"
+    String key = URLEncoder.encode(uploadFilename, 'UTF-8')
+
+    println "Uploading WAR to S3"
+    AmazonS3 s3 = new AmazonS3Client(credentials)
+    def s3Result = s3.putObject(bucketName, key, appWarFile)
+    println "Uploaded WAR ${s3Result.versionId}"
+}
 
 /**
 * Generates a unique file name for the uploaded WAR file in S3, based on the file's timestamp.
