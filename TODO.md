@@ -1,8 +1,10 @@
-- figure out MVP for this plugin
 - look into Groovy templates for version number generation
 - study CloudFoundry plugin source
-- 
-
+- copy sample credentials file
+- update readme file with quick start instructions
+- figure out how to publish docs
+- figure out how to do proper logging from script
+- get license stuff set up
 
 
 The user experience:
