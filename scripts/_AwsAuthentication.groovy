@@ -23,7 +23,7 @@ target(getServiceEndpoint: 'Read the default Elastic Beanstalk service endpoint 
 private AWSCredentials getAwsCredentialsFromSystemProperties() {
 	def accessKey = System.getProperty('AWSAccessKeyId')
 	def secretKey = System.getProperty('AWSSecretKey')
-	println 'Loading credential file from System properties'
+	println 'Loading credentials from System properties'
 
 	if (!accessKey || !secretKey) return null //TODO log helpful error message
 
