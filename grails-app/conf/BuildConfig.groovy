@@ -26,7 +26,12 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         // runtime 'mysql:mysql-connector-java:5.1.5'
-        compile 'com.amazonaws:aws-java-sdk:1.3.27'
+        build ('com.amazonaws:aws-java-sdk:1.3.27') { //this depends on HttpClient 4.1, which seems to clash with HttpClient 4.0 from Grails
+            //export = false
+        }
+        compile ('com.amazonaws:aws-java-sdk:1.3.27') { //this depends on HttpClient 4.1, which seems to clash with HttpClient 4.0 from Grails
+            //export = false
+        }
     }
 
     plugins {
