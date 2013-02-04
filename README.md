@@ -19,10 +19,10 @@ This plugin provides Grails integration with the Amazon Web Services Elastic Bea
 
 ### AWS credentials file setup
 
-- Find/create an Access Key for your AWS account (Access Key/Secret Key pair). This is found under the "Security Credentials" menu under the user account dropdown (upper right of the AWS console)
+- Find/create an Access Key for your AWS account (Access Key/Secret Key pair) from here: https://aws-portal.amazon.com/gp/aws/securityCredentials
 - Create a credentials file containing your access key and secret key
 
-The plugin uses the same credentials mechanism as the official AWS CLI tools.
+The plugin uses the same credentials property file as the official AWS CLI tools.
 
 http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/usingCLI.html
 
