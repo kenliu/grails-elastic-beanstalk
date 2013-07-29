@@ -8,33 +8,13 @@
 /.launch
 /.project
 /.settings
-/*.launch
-/*.tmproj
-/ivy*
-/eclipse
-
-# default HSQL database files for production mode
-/prodDb.*
-
-# general HSQL database files
-*Db.properties
-*Db.script
 
 # logs
 /stacktrace.log
-/test/reports
-/logs
-
-# project release file
-/*.war
 
 # plugin release file
 /*.zip
-
-# older plugin install locations
-/plugins
-/web-app/plugins
-/web-app/WEB-INF/classes
+plugin.xml
 
 # "temporary" build files
 /target
