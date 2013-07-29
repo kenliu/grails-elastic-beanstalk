@@ -10,11 +10,12 @@ import com.amazonaws.services.s3.*
 includeTargets << grailsScript("_GrailsInit")
 includeTargets << grailsScript("_GrailsWar")
 includeTargets << grailsScript("_GrailsPackage") //needed to access application settings
-includeTargets << new File("${awsElasticBeanstalkPluginDir}/scripts/_AwsAuthentication.groovy")
+includeTargets << new File(awsElasticBeanstalkPluginDir, "scripts/_AwsAuthentication.groovy")
 
 
-target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
-	depends(loadAwsCredentials, compile, createConfig, configureWarName)
+target(awsEbDeploy: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
+    depends(loadAwsCredentials, compile, createConfig, configureWarName)
+
     println "script metadata: ${metadata}"
     println "grails settings warname ${grailsSettings.projectWarFile}"
     println "war file name: ${warName}"
@@ -62,7 +63,7 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
 
 }
 
-setDefaultTarget(main)
+setDefaultTarget(awsEbDeploy)
 
 
 private String getApplicationName() {
