@@ -25,6 +25,9 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
     AWSElasticBeanstalk elasticBeanstalk = new AWSElasticBeanstalkClient(credentials)
 
     //TODO optionally set region here
+    //TODO check number of deployed applications to watch for limit
+    //TODO optionally purge old application versions
+    //TODO check for 
 
     println "Finding S3 bucket to upload WAR"
     //TODO log bucket creation
@@ -77,7 +80,8 @@ private String getEnvironmentName() {
 
 private String getDescription() {
     //TODO add customization of description using template
-    "deployed on ${new Date()} from grails AWS Elastic Beanstalk Plugin"
+    //TODO use ISO date format here
+    "Deployed on ${new Date()} from Grails AWS Elastic Beanstalk Plugin"
 }
 
 private String getVersionLabel() {
