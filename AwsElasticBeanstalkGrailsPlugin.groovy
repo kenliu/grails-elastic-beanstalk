@@ -10,7 +10,7 @@ class AwsElasticBeanstalkGrailsPlugin {
         "grails-app/views/error.gsp"
     ]
 
-    def title = "AWS Elastic Beanstalk Integration" // Headline display name of the plugin
+    def title = "AWS Elastic Beanstalk Integration"
     def author = "Kenneth Liu"
     def authorEmail = "ken.liu@gmail.com"
     def description = '''AWS Elastic Beanstalk Integration'''
