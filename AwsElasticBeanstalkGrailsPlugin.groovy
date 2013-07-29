@@ -1,6 +1,6 @@
 class AwsElasticBeanstalkGrailsPlugin {
     // the plugin version
-    def version = "0.1-SNAPSHOT"
+    def version = "0.1"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "2.0 > *"
     // the other plugins this plugin depends on
@@ -16,7 +16,7 @@ class AwsElasticBeanstalkGrailsPlugin {
     def description = '''AWS Elastic Beanstalk Integration'''
 
     // URL to the plugin's documentation
-    def documentation = "http://grails.org/plugin/aws-elastic-beanstalk"
+    def documentation = "https://github.com/kenliu/grails-elastic-beanstalk"
 
     // Extra (optional) plugin metadata
 
