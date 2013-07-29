@@ -9,13 +9,16 @@ This plugin provides Grails integration with the Amazon Web Services Elastic Bea
 - Sign up for an AWS account
 - In the AWS Elastic Beanstalk console (web interface), click "Create New Application".
 - For "Application Name" enter the name of your Grails application (the app.name specified in application.properties)
-- For "Container Type", select any of the Tomcat containers (64-bit Tomcat 7 recommended)
-- For "Application Source", select "Use the Sample Application", and click "Continue"
-- For "Environment Name", enter "Default-Environment"
-- For "Environment URL", enter a subdomain name for your application. This domain must be globally unique across AWS and will be accessible to the public
-- Click "Continue"
-- Select the "Instance Type". "t1.micro" should be sufficient for a small Grails application but you may need "m1.small" if your application has a large memory footprint. Note that "t1.micro" falls under the "Free Tier" (free usage for the first year) but other instance sizes are not free
+- On the "Environment Type" screen, for "Predefined Configuration:", select "Tomcat"
+- For "Environment type:", you can select either "Single instance" or "Load balancing, autoscaling", and click "Continue"
+- On the "Application Version" screen, for "Source", select "Sample application", and click "Continue"
+- On the "Environment Information" screen, for "Environment Name", enter "Default-Environment"
+- For "Environment URL", enter a subdomain name for your application. This domain must be globally unique across AWS and will be accessible to the public. Click "Check availability" to check that the subdomain is not already used. Click "Continue"
+- On the "Additional Resources" screen, click "Continue"
+- On the "Configuration Details" screen, select the "Instance type". "t1.micro" should be sufficient for a small Grails application but you may need "m1.small" if your application has a large memory footprint. Note that "t1.micro" falls under the "Free Tier" (free usage for the first year) but other instance sizes are not free
 - Click "Continue", then click "Finish". It will take a few minutes for AWS to allocate services and spin up your new instance.
+
+TODO mention "Create Default Profile" on Configuration details
 
 ### AWS credentials file setup
 
@@ -24,15 +27,15 @@ This plugin provides Grails integration with the Amazon Web Services Elastic Bea
 
 The plugin uses the same credentials property file as the official AWS CLI tools.
 
-http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/usingCLI.html
+see: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/usingCLI.html
 
 - Set an environment variable AWS_CREDENTIAL_FILE with the path to the credentials file
 
 ### Plugin Installation
 
-In BuildConfig.groovy add the following plugin dependency to the "plugins" section
+In BuildConfig.groovy add the following plugin dependency to the "plugins" section:
 
-build ":aws-elastic-beanstalk:0.1"
+build ':aws-elastic-beanstalk:0.1'
 
 ### Plugin Configuration
 
@@ -40,16 +43,16 @@ If you previously created your own Elastic Beanstalk application/environment (pr
 
 ## Deploying your WAR to Elastic Beanstalk
 
-The plugin provides a Grails target for deploying your WAR to Elastic Beanstalk.
+The plugin provides a Grails command for deploying your WAR to Elastic Beanstalk.
 
-run Grails script:
+run Grails command:
 grails aws-eb-deploy
 
 ## Additional configuration
 
 Config.groovy:
 grails.plugin.awsElasticBeanstalk.applicationName = 'testApplication' //TODO describe default, restrictions
-grails.plugin.awsElasticBeanstalk.environmentName = 'testApplication' //TODO describe default
+grails.plugin.awsElasticBeanstalk.environmentName = 'testEnvironment' //TODO describe default
 
 ## Acknowledgements
 
