@@ -12,13 +12,25 @@ includeTargets << grailsScript("_GrailsWar")
 includeTargets << grailsScript("_GrailsPackage") //needed to access application settings
 includeTargets << new File(awsElasticBeanstalkPluginDir, "scripts/_AwsAuthentication.groovy")
 
+//TODO check what happens on a new installation before plugin is downloaded (breaks with new Grails version?)
+
 
 target(awsEbDeploy: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
-    depends(loadAwsCredentials, compile, createConfig, configureWarName)
+    depends(loadAwsCredentials, compile, createConfig, configureWarName) 
 
+    String warFileName
+
+    //configureWarName target doesn't set the warName property since 2.2 (http://bit.ly/17uHfFm)
+    if (binding.variables.containsKey("warName")) {
+        warFileName = warName
+    } else {
+        warFileName = warCreator.warName
+    }
+
+    //output global variables coming from Grails scripts
     println "script metadata: ${metadata}"
-    println "grails settings warname ${grailsSettings.projectWarFile}"
-    println "war file name: ${warName}"
+    println "Grails settings warname ${grailsSettings.projectWarFile}"
+    println "WAR file name: ${warFileName}"
 
     println 'Starting AWS Elastic Beanstalk deployment'
 
@@ -28,12 +40,12 @@ target(awsEbDeploy: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
     //TODO optionally set region here
     //TODO check number of deployed applications to watch for limit
     //TODO optionally purge old application versions
-    //TODO check for 
 
     println "Finding S3 bucket to upload WAR"
     //TODO log bucket creation
     String bucketName = elasticBeanstalk.createStorageLocation().getS3Bucket()
 
+    File appWarFile = getAppWarFile(warFileName)
     def s3key = uniqueTempWarFileName(appWarFile)
     uploadToS3(credentials, appWarFile, bucketName, s3key)
 
@@ -44,6 +56,8 @@ target(awsEbDeploy: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
     println "Create application version with uploaded application"
     println "applicationName: ${applicationName}"
     println "environmentName: ${environmentName}"
+    String versionLabel = getVersionLabel(appWarFile)
+    println "versionLabel: ${versionLabel}"
     def createApplicationRequest = new CreateApplicationVersionRequest(
         applicationName: applicationName,
         versionLabel: versionLabel,
@@ -85,20 +99,20 @@ private String getDescription() {
     "Deployed on ${new Date()} from Grails AWS Elastic Beanstalk Plugin"
 }
 
-private String getVersionLabel() {
+private String getVersionLabel(warFile) {
     //TODO provide for alternate algorithms for generating version label
     //def applicationVersion = metadata.getApplicationVersion()
-    def label = getWarTimestamp(appWarFile)
+    def label = getWarTimestamp(warFile)
     println "version label: ${label}"
     label
 }
 
-private File getAppWarFile() {
-
+private File getAppWarFile(warFilename) {
+    //FIXME this makes an assumption that the war file is in the basedir but in later versions of Grails it was moved
     //TODO check to make sure that the WAR actually exist
     //println "loading WAR file from basedir: ${basedir}"
-    //println "war file name: ${warName}"
-    new File(warName)
+    //println "war file name: ${warFilename}"
+    new File(warFilename)
 }
 
 private String getWarTimestamp(File warFile) {
@@ -107,17 +121,18 @@ private String getWarTimestamp(File warFile) {
 }
 
 private uploadToS3(credentials, file, bucketName, key) {
-    println "Uploading WAR file: ${key}"
+    println "Uploading local WAR file ${file.name} to remote WAR file: ${key}"
     String s3key = URLEncoder.encode(key, 'UTF-8')
 
     println "Uploading WAR to S3 bucket ${bucketName}"
     AmazonS3 s3 = new AmazonS3Client(credentials)
-    def s3Result = s3.putObject(bucketName, s3key, appWarFile)
+    def s3Result = s3.putObject(bucketName, s3key, file)
     println "Uploaded WAR ${s3Result.versionId}"
 }
 
 /**
 * Generates a unique file name for the uploaded WAR file in S3, based on the file's timestamp.
+* //TODO what happens if the same file is uploaded twice?
 */
 private String uniqueTempWarFileName(warFile) {
     def uuid = Long.toHexString(warFile.lastModified())
