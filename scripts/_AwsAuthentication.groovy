@@ -27,12 +27,6 @@ target(loadAwsCredentials: 'Load AWS credentials from a file or from env') {
 	awsCredentials = credentials //set global property
 }
 
-target(getServiceEndpoint: 'Read the default Elastic Beanstalk service endpoint ') {
-	ebServiceEndpoint = '' //TODO finish this
-	//ELASTICBEANSTALK_URL
-	//config file
-}
-
 /**
 * @return null if properties not found
 */
