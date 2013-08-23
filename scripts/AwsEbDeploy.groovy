@@ -108,9 +108,7 @@ private String getVersionLabel(warFile) {
 }
 
 private File getAppWarFile(warFilename) {
-    //FIXME this makes an assumption that the war file is in the basedir but in later versions of Grails it was moved
     //TODO check to make sure that the WAR actually exist
-    //println "loading WAR file from basedir: ${basedir}"
     //println "war file name: ${warFilename}"
     new File(warFilename)
 }
@@ -127,7 +125,7 @@ private uploadToS3(credentials, file, bucketName, key) {
     println "Uploading WAR to S3 bucket ${bucketName}"
     AmazonS3 s3 = new AmazonS3Client(credentials)
     def s3Result = s3.putObject(bucketName, s3key, file)
-    println "Uploaded WAR ${s3Result.versionId}"
+    println "Uploaded WAR to S3"
 }
 
 /**
