@@ -66,4 +66,5 @@ Config.groovy:
 ## Acknowledgements
 
 ## Version History
+* 0.1.1 - fix incompatibility issue with Grails 2.x
 * 0.1 - Initial release - deploy WAR to existing EB environment
