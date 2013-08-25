@@ -7,6 +7,9 @@
 /.project
 /.settings
 
+.gradle
+.idea
+
 # logs
 /stacktrace.log
 
