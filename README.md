@@ -58,14 +58,31 @@ run Grails command:
 
 Config.groovy:
 
-<!-- TODO describe default values, restrictions -->
+<!-- TODO describe default values - default to Grails application name?, restrictions -->
 
     grails.plugin.awsElasticBeanstalk.applicationName = 'myApplication'
     grails.plugin.awsElasticBeanstalk.environmentName = 'myEnvironment'
 
+
+### Specifying the target AWS region
+    grails.plugin.awsElasticBeanstalk.regionEndpoint = 'myApplication'
+
+<!-- TODO support ELASTICBEANSTALK_URL -->
+<!-- http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region -->
+
+## Command reference
+
+aws-eb-deploy: deploys a WAR file into an existing environment
+
+aws-eb-terminate-environment: terminates a running environment
+
+aws-eb-stop: alias for aws-eb-terminate-environment
+
+
+
 ## Acknowledgements
+Maikel Alderhout's Blog http://malderhout.wordpress.com/2011/10/10/automate-deployment-from-cloudbees-jenkins-to-amazon-beanstalk/
 
 ## Version History
-* 0.2 - add aws-eb-terminate-environment and aws-eb-stop commands
 * 0.1.1 - fix incompatibility issue with Grails 2.2
 * 0.1 - Initial release - deploy WAR to existing EB environment
