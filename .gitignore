@@ -7,9 +7,10 @@
 /.project
 /.settings
 
-.gradle
+# Intellij
 .idea
 *.iml
+*.iws
 
 # logs
 /stacktrace.log
@@ -21,8 +22,15 @@ plugin.xml
 # "temporary" build files
 /target
 
+# gradle
+.gradle
+/build
+
 # other
-*.iws
 
 .DS_Store
+Thumbs.db
+
+
+# AWS credentials file
 credentials.properties

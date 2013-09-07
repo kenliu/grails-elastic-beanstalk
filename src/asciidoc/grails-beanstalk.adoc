@@ -1,0 +1,13 @@
+== Configuring a Grails application to use Elastic Beanstalk
+
+
+By default, when creating a Grails WAR (using the "grails war" command), the environment selected is the "production" environment.
+
+TK explain DB datasource configuration
+
+
+
+== Configuring an RDS database on Elastic Beanstalk
+
+
+
