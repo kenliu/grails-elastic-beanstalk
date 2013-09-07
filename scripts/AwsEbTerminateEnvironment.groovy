@@ -21,31 +21,18 @@ import com.amazonaws.services.elasticbeanstalk.model.*
 * @author Kenneth Liu
 */
 
-includeTargets << grailsScript("_GrailsInit")
-includeTargets << grailsScript("_GrailsWar")
-includeTargets << grailsScript("_GrailsPackage") //needed to access application settings
-includeTargets << new File(awsElasticBeanstalkPluginDir, "scripts/_AwsAuthentication.groovy")
+includeTargets << new File(awsElasticBeanstalkPluginDir, "scripts/_AwsEbCommon.groovy")
 
-//TODO check what happens on a new installation before plugin is downloaded (breaks with new Grails version?)
-target(awsEbTerminateEnvironment: "Terminate running AWS Elastic Beanstalk environment") {
-	depends(loadAwsCredentials, compile, createConfig)
-
-    AWSElasticBeanstalk elasticBeanstalk = new AWSElasticBeanstalkClient(awsCredentials)
-
-    //TODO set endpoint here
+target(awsEbTerminateEnvironment: "Terminate a running AWS Elastic Beanstalk environment") {
+	depends(initElasticBeanstalkClient)
 
     def targetEnvironment = this.environmentName
+
+    //TODO first check that environment exists
+
 	def result = elasticBeanstalk.terminateEnvironment(new TerminateEnvironmentRequest().withEnvironmentName(targetEnvironment))
 	println "Environment terminating: ${environmentName}"
 	println result
 }
 
 setDefaultTarget(awsEbTerminateEnvironment)
-
-//TODO refactor this between this script and the Deploy script
-private String getEnvironmentName() {
-    def name = config.grails?.plugin?.awsElasticBeanstalk?.environmentName
-    if (!name) name = System.getProperty('awsElasticBeanstalk.environmentName')
-    name ?: metadata.'app.name' + '-default' //the name of the default environment used in the AWS Console
-    //FIXME this should be unique to account - needs to be truncated? - appname must be between 4 and 23 chars long
-}

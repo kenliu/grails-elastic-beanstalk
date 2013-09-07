@@ -15,10 +15,6 @@
  */
 
 import com.amazonaws.auth.*
-
-/**
-* @author Kenneth Liu
-*/import com.amazonaws.auth.*
 import com.amazonaws.services.elasticbeanstalk.*
 import com.amazonaws.services.elasticbeanstalk.model.*
 import com.amazonaws.services.s3.*
@@ -29,14 +25,17 @@ import com.amazonaws.services.s3.*
 
 includeTargets << grailsScript("_GrailsInit")
 includeTargets << grailsScript("_GrailsWar")
-includeTargets << grailsScript("_GrailsPackage") //needed to access application settings
-includeTargets << new File(awsElasticBeanstalkPluginDir, "scripts/_AwsAuthentication.groovy")
+//includeTargets << grailsScript("_GrailsPackage") //needed to access application settings
+includeTargets << new File(awsElasticBeanstalkPluginDir, "scripts/_AwsEbCommon.groovy")
 
 //TODO check what happens on a new installation before plugin is downloaded (breaks with new Grails version?)
 
 
-target(awsEbDeploy: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
-    depends(loadAwsCredentials, compile, createConfig, configureWarName) 
+USAGE = """
+grails aws-eb-deploy
+"""
+target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
+    depends(compile, createConfig, configureWarName, initElasticBeanstalkClient, initTargetApplicationAndEnvironmentConfig) 
 
     String warFileName
 
@@ -54,17 +53,18 @@ target(awsEbDeploy: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
 
     println 'Starting AWS Elastic Beanstalk deployment'
 
-    AWSElasticBeanstalk elasticBeanstalk = new AWSElasticBeanstalkClient(awsCredentials)
-
-    //TODO optionally set region here
     //TODO check number of deployed applications to watch for limit
     //TODO optionally purge old application versions
+
+    File appWarFile = getAppWarFile(warFileName)
+    if(!appWarFile.exists()) {
+        //TODO log error
+    }
 
     println "Finding S3 bucket to upload WAR"
     //TODO log bucket creation
     String bucketName = elasticBeanstalk.createStorageLocation().getS3Bucket()
 
-    File appWarFile = getAppWarFile(warFileName)
     def s3key = uniqueTempWarFileName(appWarFile)
     uploadToS3(awsCredentials, appWarFile, bucketName, s3key)
 
@@ -96,21 +96,7 @@ target(awsEbDeploy: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
 
 }
 
-setDefaultTarget(awsEbDeploy)
-
-
-private String getApplicationName() {
-    def name = config.grails?.plugin?.awsElasticBeanstalk?.applicationName 
-    if (!name) name = System.getProperty('awsElasticBeanstalk.applicationName')
-    name ?: metadata.'app.name'
-}
-
-private String getEnvironmentName() {
-    def name = config.grails?.plugin?.awsElasticBeanstalk?.environmentName
-    if (!name) name = System.getProperty('awsElasticBeanstalk.environmentName')
-    name ?: metadata.'app.name' + '-default' //the name of the default environment used in the AWS Console
-    //FIXME this should be unique to account - needs to be truncated? - appname must be between 4 and 23 chars long
-}
+setDefaultTarget(main)
 
 private String getDescription() {
     //TODO add customization of description using template

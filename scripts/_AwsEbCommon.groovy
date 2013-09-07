@@ -22,18 +22,23 @@ import com.amazonaws.services.elasticbeanstalk.model.*
 * @author Kenneth Liu
 */
 
+includeTargets << grailsScript("_GrailsInit")
+includeTargets << grailsScript("_GrailsPackage") //needed to access application settings
+
 //global script variables
 //def awsCredentials
 //def elasticBeanstalk
 //def applicationName
 //def environmentName
 
+
+
 target(initPlugin: '') {
 
 }
 
-target(initElasticBeanstalkClient: 'Create an instance of the Elastic Beanstalk client') {
-	depends(loadAwsCredentials)
+target(initElasticBeanstalkClient: 'Create an instance of the Elastic Beanstalk client - AWS credentials required') {
+	depends(initPlugin, loadAwsCredentials, initTargetApplicationAndEnvironmentConfig)
 	println "initializing ElasticBeanstalk client"
     elasticBeanstalk = new AWSElasticBeanstalkClient(awsCredentials)
 
@@ -44,7 +49,8 @@ target(initElasticBeanstalkClient: 'Create an instance of the Elastic Beanstalk 
     }
 }
 
-target(initTargetApplicationAndEnvironmentConfig: '') {
+target(initTargetApplicationAndEnvironmentConfig: 'Loads application and environment properties') {
+	depends(compile, createConfig)
 	applicationName = getApplicationName() //set global
 	environmentName = getEnvironmentName() //set global
 }
