@@ -18,11 +18,13 @@ import com.amazonaws.auth.*
 import com.amazonaws.services.elasticbeanstalk.*
 import com.amazonaws.services.elasticbeanstalk.model.*
 
+
 /**
 * @author Kenneth Liu
 */
 
 includeTargets << grailsScript("_GrailsInit")
+includeTargets << grailsScript("Compile")
 includeTargets << grailsScript("_GrailsPackage") //needed to access application settings
 
 //global script variables
@@ -30,6 +32,7 @@ includeTargets << grailsScript("_GrailsPackage") //needed to access application 
 //def elasticBeanstalk
 //def applicationName
 //def environmentName
+//def serviceEndpointUrl
 
 
 
@@ -40,13 +43,13 @@ target(initPlugin: '') {
 target(initElasticBeanstalkClient: 'Create an instance of the Elastic Beanstalk client - AWS credentials required') {
 	depends(initPlugin, loadAwsCredentials, initTargetApplicationAndEnvironmentConfig)
 	println "initializing ElasticBeanstalk client"
-    elasticBeanstalk = new AWSElasticBeanstalkClient(awsCredentials)
+	elasticBeanstalk = new AWSElasticBeanstalkClient(awsCredentials)
 
-    //setup non-default endpoint URL, if configured
-    def endpointUrl = getEndpointUrl()
-    if (endpointUrl) {
+	//setup non-default endpoint URL, if configured
+	def endpointUrl = getEndpointUrl()
+	if (endpointUrl) {
 		elasticBeanstalk.endpoint = endpointUrl
-    }
+	}
 }
 
 target(initTargetApplicationAndEnvironmentConfig: 'Loads application and environment properties') {
@@ -99,31 +102,28 @@ private AWSCredentials getAwsCredentialsFromPropertiesFile() {
 }
 
 private AWSCredentials getAwsCredentialsFromGrailsConfig() {
-
+	//bad idea to support this?
 }
 
-
 private String getApplicationName() {
-    def name = config.grails?.plugin?.awsElasticBeanstalk?.applicationName 
-    if (!name) name = System.getProperty('awsElasticBeanstalk.applicationName')
-    name ?: metadata.'app.name'
+	def name = config.grails?.plugin?.awsElasticBeanstalk?.applicationName 
+	if (!name) name = System.getProperty('awsElasticBeanstalk.applicationName')
+	name ?: metadata.'app.name'
+	//TODO warn if the application name is shorter than 4 or longer than 23
 }
 
 private String getEnvironmentName() {
-    def name = config.grails?.plugin?.awsElasticBeanstalk?.environmentName
-    if (!name) name = System.getProperty('awsElasticBeanstalk.environmentName')
-    name ?: metadata.'app.name' + '-default' //the name of the default environment used in the AWS Console
-    //FIXME this should be unique to account - needs to be truncated? - appname must be between 4 and 23 chars long
+	def name = config.grails?.plugin?.awsElasticBeanstalk?.environmentName
+	if (!name) name = System.getProperty('awsElasticBeanstalk.environmentName')
+	name ?: metadata.'app.name' + '-default' //the name of the default environment used in the AWS Console
+	//FIXME this should be unique to account - needs to be truncated? - appname must be between 4 and 23 chars long
 }
 
 private String getEndpointUrl() {
-    def url = config.grails?.plugin?.awsElasticBeanstalk?.serviceEndpointUrl
-    if (!url) url = System.getProperty('awsElasticBeanstalk.serviceEndpointUrl')
-    if (!url) return getServiceEndpointFromEnv()
-}
-
-private String getServiceEndpointFromEnv() {
+	def url = config.grails?.plugin?.awsElasticBeanstalk?.serviceEndpointUrl
+	if (!url) url = System.getProperty('awsElasticBeanstalk.serviceEndpointUrl')
 	//see http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/usingCLI.html
-	def endpointEnvVar = System.getenv('ELASTICBEANSTALK_URL') //for compatibility with EB API CLI
+	if (!url) url = System.getenv('ELASTICBEANSTALK_URL') //for compatibility with EB API CLI
+	//println 'using service endpoint URL: ' + url
+	url
 }
-
