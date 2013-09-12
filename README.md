@@ -2,14 +2,15 @@
 
 This plugin provides Grails integration with the AWS Elastic Beanstalk service.
 
-Features:
-- Build WAR file and deploy to Elastic Beanstalk using Grails command
+Features Grails scripts for managing AWS Elastic Beanstalk deployments:
+- aws-eb-deploy: Deploy a WAR file to Elastic Beanstalk
+- aws-eb-stop: Terminate (shut down) a running Elastic Beanstalk environment
 
 ## Installation and Configuration
 
-### Setting up the Elastic Beanstalk environment for the first time
+### Setting up an Elastic Beanstalk environment for the first time
 
-Before you can deploy a Grails application, you'll need to create an Elastic Beanstalk "Application" and "Environment" to be your target deployment container (Tomcat).
+Before you can deploy a Grails application, you'll need to create an Elastic Beanstalk "Application" and start up an "Environment" to be your target deployment container.
 
 1. Sign up for an AWS account (credit card needed).
 1. In the AWS Elastic Beanstalk console (web interface), click "Create New Application".
@@ -24,11 +25,12 @@ Before you can deploy a Grails application, you'll need to create an Elastic Bea
 1. Click "Continue", then click "Finish". It will take a few minutes for AWS to allocate services and spin up your new instance.
 
 ### AWS Credentials File Setup
+All API calls to AWS require an API key consisting of an "Access Key" and a "Secret Key" pair.
 
 1. Find/create an Access Key for your AWS account (Access Key/Secret Key pair) from the "Your Security Credentials" page: https://console.aws.amazon.com/iam/home?#security_credential
 1. Create a credentials file containing your access key and secret key
 
-Warning: Be sure to properly secure this key information! Anyone who has this key can use your AWS account and potentially cost you a lot of money.
+WARNING: Be sure to properly secure this key information! Anyone who has this key can use your AWS account and potentially cost you a lot of money.
 
 The plugin uses the same credentials property file as the official AWS CLI tools.
 
@@ -44,7 +46,7 @@ In BuildConfig.groovy add the following plugin dependency to the "plugins" secti
 
 ### Plugin Configuration
 
-If you previously created your own Elastic Beanstalk application/environment (prior to these steps), you can configure them in Config.groovy (see "Additional configuration" below). Otherwise no other configuraiton is required.
+If you previously created your own Elastic Beanstalk application/environment (prior to these steps), you can configure them in Config.groovy (see "Additional configuration" below). Otherwise no other configuration is required (defaults will be used).
 
 ## Deploying your WAR to Elastic Beanstalk
 
@@ -52,22 +54,42 @@ The plugin provides a Grails command for deploying your WAR to Elastic Beanstalk
 
 run Grails command:
 
-    grails aws-eb-deploy
+	grails aws-eb-deploy
+
+<!--## Configuring a Grails app to run on Elastic Beanstalk
+
+Grails 
+-->
+
+## Shutting down the application
+
+Run the grails command:
+
+	grails aws-eb-stop
+
+to shut down the running environment. Note this will not only shut down the application container, it will also shut down and the running EC2 instance(s) for the target environment and delete all other associated AWS resources for the environment (e.g. Elastic IP, ELB).
+
+The +aws-eb-stop+ command is an alias for +aws-eb-terminate-environment+
 
 ## Additional configuration
 
 Config.groovy:
 
-<!-- TODO describe default values - default to Grails application name?, restrictions -->
-
-    grails.plugin.awsElasticBeanstalk.applicationName = 'myApplication'
+	grails.plugin.awsElasticBeanstalk.applicationName = 'myApplication'
     grails.plugin.awsElasticBeanstalk.environmentName = 'myEnvironment'
 
+## Roadmap
 
+
+
+## Contributing
+
+Pull requests are appreciated!
 
 ## Acknowledgements
 Maikel Alderhout's Blog http://malderhout.wordpress.com/2011/10/10/automate-deployment-from-cloudbees-jenkins-to-amazon-beanstalk/
 
 ## Version History
+* 0.2 - add support for alternate regions, add aws-eb-terminate-environment and aws-eb-stop commands
 * 0.1.1 - fix incompatibility issue with Grails 2.2
 * 0.1 - Initial release - deploy WAR to existing EB environment
