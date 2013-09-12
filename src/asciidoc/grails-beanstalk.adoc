@@ -1,24 +1,101 @@
-= Guide to configuring a Grails application for Elastic Beanstalk
+= Guide to deploying a Grails application on AWS Elastic Beanstalk
+
+This document covers the basic steps needed to configure a Grails application to run on AWS Elastic Beanstalk.
+
+== About Environments
+
+Grails has the concept of "Environments" to distinguish between multiple configurations of an application (e.g. development, test, production). This is not to be confused with the "Environment" concept in Elastic Beanstalk, which represents a runtime container configuration and set of resources. When running in Elastic Beanstalk, typically the Grails environment is "production", which is the default Grails environment used when created a WAR file. The same "production" WAR file may be deployed in multiple Elastic Beanstalk environments. 
+
+== JVM and AWS instance configuration
+
+To configure the heap size and PermGen size...TK
+
+By default, the Tomcat container instance provisioned by Elastic Beanstalk will be configured with a heap size of XXX (-xXXX) TK and a PermGen size of XXX.
+
+AWS container instances vary in terms of available RAM. Note that the heap size must be smaller than the available memory available for the instance type, since some RAM must be available for operating system.
+
+== Application configuration
+
+Elastic Beanstalk provides a set of default set of application configuration variables named +PARAM1-PARAM5+ that are set in the container and can be read as System properties (as a String):
+
+	def mySetting = System.getProperty('PARAM1')
+
+In addition, any number of arbitrary name/value pairs can TK
+
+It is recommended to set one of these properties to the external domain TK describe t
+
+	grails.serverURL = 'http://www.myapplication.com'
+
+While this not required by Grails, if this property is not set the URL will be detected to be ... and not ...TK
+
+TK screenshot here
 
 
+== Datasource configuration
+
+Elastic Beanstalk provides a container configuration setting named +JDBC_CONNECTION_STRING+ that is set as a System property. Unfortunately, Elastic Beanstalk doesn't provide any built-in way to manage DB credentials so these should be set as container configuration settings as well.
+
++DataSource.groovy+
+
+	production {
+        dataSource {
+            url = System.getProperty('JDBC_CONNECTION_STRING')
+            username = System.getProperty('PARAM2')
+            password = System.getProperty('PARAM3')
+    	}
+	}
+
+TK screenshot of AWS console here
 
 
+NOTE: By default, when creating a WAR (using the "grails war" command), the Grails environment selected is the +production+ environment.
 
+The ElasticBeanstalk
 
+See also Configuring and RDS database below
 
-
-
-By default, when creating a Grails WAR (using the "grails war" command), the environment selected is the "production" environment.
-
-TK explain DB datasource configuration
+== Injecting configuration for multiple environments
 
 
 == Logging configuration
 
 
-== Configuring an RDS database on Elastic Beanstalk
+== Configuring an RDS database
 
 
-== Best practices and tips for deploying on AWS Elastic Beanstalk
+== Additional container options
 
+
+== Additional configuration
+
+
+== Tips and Best practices for running on AWS Elastic Beanstalk
+
+
+=== Upgrading instances, security patches
+
+TK discuss OS type (AWS Linux)
+
+
+=== About Elastic Beanstalk pricing
+
+Elastic Beanstalk is a free service in the sense that there is no additional cost to
+
+
+=== AWS service limits
+
+=== Region selection
+
+=== Redundancy
+
+=== RDS read replicas
+
+
+=== Logging 
+
+=== Remote debugging
+
+== References
+
+Bobby Warner's blog post and others
 

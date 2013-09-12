@@ -1,0 +1,3 @@
+= Grails AWS Elastic Beanstalk plugin quickstart
+
+image::aws-welcome-tomcat-screenshot.png[beanstalk welcome screenshot]
