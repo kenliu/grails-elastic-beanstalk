@@ -18,7 +18,7 @@ eventCreateWarStart = { warName, stagingDir ->
 
     def ebOptions = []
     propertiesMap.each { key, value ->
-        ebOptions << [option_name:key, option_value:value]
+        ebOptions << [option_name:key, value:value]
     }
 
     DumperOptions yamlOptions = new DumperOptions()
