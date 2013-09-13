@@ -54,7 +54,7 @@ The plugin provides a Grails command for deploying your WAR to Elastic Beanstalk
 
 run Grails command:
 
-	grails aws-eb-deploy
+    grails aws-eb-deploy
 
 <!--## Configuring a Grails app to run on Elastic Beanstalk
 
@@ -65,7 +65,7 @@ Grails
 
 Run the grails command:
 
-	grails aws-eb-stop
+    grails aws-eb-stop
 
 to shut down the running environment. Note this will not only shut down the application container, it will also shut down and the running EC2 instance(s) for the target environment and delete all other associated AWS resources for the environment (e.g. Elastic IP, ELB).
 
@@ -75,7 +75,7 @@ The +aws-eb-stop+ command is an alias for +aws-eb-terminate-environment+
 
 Config.groovy:
 
-	grails.plugin.awsElasticBeanstalk.applicationName = 'myApplication'
+    grails.plugin.awsElasticBeanstalk.applicationName = 'myApplication'
     grails.plugin.awsElasticBeanstalk.environmentName = 'myEnvironment'
 
 ## Roadmap
