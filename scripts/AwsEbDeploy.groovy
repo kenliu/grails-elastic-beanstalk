@@ -47,8 +47,8 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
     }
 
     //output global variables coming from Grails scripts
-    println "script metadata: ${metadata}"
-    println "Grails settings warname ${grailsSettings.projectWarFile}"
+    //println "script metadata: ${metadata}"
+    //println "Grails settings warname ${grailsSettings.projectWarFile}"
     println "WAR file name: ${warFileName}"
 
     println 'Starting AWS Elastic Beanstalk deployment'
@@ -61,6 +61,8 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
         println "Could not find WAR file to upload.  Expected: $appWarFile.absolutePath"
         exit 1
     }
+
+    //TODO first verify that the target beanstalk environment exists (if application is missing it will get created)
 
     println "Finding S3 bucket to upload WAR"
     //TODO log bucket creation
