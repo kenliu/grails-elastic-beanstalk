@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd'>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.grails.plugins</groupId>
+  <artifactId>aws-elastic-beanstalk</artifactId>
+  <packaging>zip</packaging>
+  <version>0.1.1-frontlinesms</version>
+  <name>AWS Elastic Beanstalk Integration</name>
+  <description>AWS Elastic Beanstalk Integration</description>
+  <url>https://github.com/kenliu/grails-elastic-beanstalk</url>
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Kenneth Liu</name>
+      <email>ken.liu@gmail.com</email>
+    </developer>
+  </developers>
+  <issueManagement>
+    <system>GITHUB</system>
+    <url>https://github.com/kenliu/grails-elastic-beanstalk/issues</url>
+  </issueManagement>
+  <scm>
+    <url>https://github.com/kenliu/grails-elastic-beanstalk</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>1.13</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk</artifactId>
+      <version>1.5.5</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>

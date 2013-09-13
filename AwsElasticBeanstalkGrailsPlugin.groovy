@@ -15,7 +15,7 @@
  */
 
 class AwsElasticBeanstalkGrailsPlugin {
-    def version = "0.2-SNAPSHOT"
+    def version = '0.1.1-frontlinesms'
     def grailsVersion = "2.0 > *"
     def title = "AWS Elastic Beanstalk Integration"
     def author = "Kenneth Liu"
