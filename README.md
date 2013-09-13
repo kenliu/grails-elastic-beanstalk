@@ -77,6 +77,7 @@ Config.groovy:
 
     grails.plugin.awsElasticBeanstalk.applicationName = 'myApplication'
     grails.plugin.awsElasticBeanstalk.environmentName = 'myEnvironment'
+    grails.plugin.awsElasticBeanstalk.systemProperties = ['property.name.1':'property-value-1', 'property.name.2':'property-value-2']
 
 ## Roadmap
 
