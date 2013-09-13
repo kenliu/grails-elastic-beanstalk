@@ -43,6 +43,8 @@ target(initPlugin: '') {
 target(initElasticBeanstalkClient: 'Create an instance of the Elastic Beanstalk client - AWS credentials required') {
 	depends(initPlugin, loadAwsCredentials, initTargetApplicationAndEnvironmentConfig)
 	println "initializing ElasticBeanstalk client"
+
+	//TODO handle case where credentials are not found
 	elasticBeanstalk = new AWSElasticBeanstalkClient(awsCredentials)
 
 	//setup non-default endpoint URL, if configured

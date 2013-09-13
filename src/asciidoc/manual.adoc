@@ -9,9 +9,11 @@
 
 == Introduction
 
+TK
+
 == Installation
 
-In BuildConfig.groovy add the following plugin dependency to the "plugins" section (with the latest version of the plugin specified):
+In +BuildConfig.groovy+ add the following plugin dependency to the +plugins+ section (with the latest version of the plugin specified):
 
     build ':aws-elastic-beanstalk:0.2'
 
@@ -21,11 +23,9 @@ In BuildConfig.groovy add the following plugin dependency to the "plugins" secti
 
 === Using a non-default AWS region
 
-By default, the Elastic Beanstalk plugin uses the US-East (Northern Virginia) AWS Region (+us-east-1+). To select a diferent target region, configure a different AWS Elastic Beanstalk service endpoint using one of the available endpoints listed here:
+By default, the Elastic Beanstalk plugin uses the US-East (Northern Virginia) AWS Region (+us-east-1+). To use a different region, configure the AWS Elastic Beanstalk service endpoint using one of the endpoint URLs listed in the AWS reference docs:
 
 http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
-
-To configure the plugin to use an alternate service endpoint, specify the 
 
 [options="header"]
 |===

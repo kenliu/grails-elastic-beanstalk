@@ -95,6 +95,8 @@ Elastic Beanstalk is a free service in the sense that there is no additional cos
 
 === Remote debugging
 
+== Securing Elastic Beanstalk using IAM roles
+
 == References
 
 Bobby Warner's blog post and others

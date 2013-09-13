@@ -36,7 +36,7 @@ The plugin uses the same credentials property file as the official AWS CLI tools
 
 see: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/usingCLI.html
 
-- Set an environment variable AWS_CREDENTIAL_FILE with the path to the credentials file
+1. Set an environment variable AWS_CREDENTIAL_FILE with the path to the credentials file
 
 ### Plugin Installation
 
