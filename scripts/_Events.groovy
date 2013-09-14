@@ -2,12 +2,22 @@ import grails.util.Holders
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.DumperOptions
 
+
+
+
 eventCreateWarStart = { warName, stagingDir ->
+
+    //create the .ebextensions folder and generate an environments.config file
+
     def config = Holders.config
     def propertiesMap = config.grails.plugin.awsElasticBeanstalk.systemProperties
     if(!propertiesMap) {
         return
     }
+
+    //TODO determine how setting the JVM options here will affect the container settings
+    //does it automatically override/reset the container options?
+    //see http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customize-containers-ec2.html
 
     final File EXTENSIONS_DIR = new File(stagingDir, '.ebextensions')
     if(!EXTENSIONS_DIR.mkdir()) {

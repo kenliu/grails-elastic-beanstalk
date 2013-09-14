@@ -3,6 +3,7 @@ package net.kenliu.awsebplugin
 class BeanstalkConstants {
 
 	/**
+	* Valid solution stacks for running Java applications
 	*/
 	enum SolutionStacks {
 		TOMCAT7_32('32bit Amazon Linux running Tomcat 7'),
