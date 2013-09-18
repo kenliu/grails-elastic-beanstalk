@@ -26,6 +26,7 @@ buildscript {
 }
 
 apply plugin: 'asciidoctor'
+//apply plugin: 'codenarc'
 
 //FIXME This fails with "No history is available."
 //asciidoctor {
