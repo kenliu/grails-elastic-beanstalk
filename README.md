@@ -42,7 +42,7 @@ see: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/usingCLI.html
 
 In BuildConfig.groovy add the following plugin dependency to the "plugins" section:
 
-    build ':aws-elastic-beanstalk:0.1.1'
+    build ':aws-elastic-beanstalk:0.2'
 
 ### Plugin Configuration
 
