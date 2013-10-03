@@ -6,7 +6,7 @@ repositories {
 
 dependencies {
     compile localGroovy() //TODO maybe should use specified groovy version instead?
-    compile 'com.amazonaws:aws-java-sdk:1.5.7'
+    compile 'com.amazonaws:aws-java-sdk:1.6.0'
 }
 
 libsDirName = '../../lib'
