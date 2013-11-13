@@ -65,10 +65,24 @@ target(initTargetApplicationAndEnvironmentConfig: 'Loads application and environ
 */
 
 target(loadAwsCredentials: 'Load AWS credentials from a file or from env') {
-	println "loading AWS credentials"
-	def credentials = getAwsCredentialsFromPropertiesFile()
-	if (!credentials) credentials = getAwsCredentialsFromSystemProperties()
-	awsCredentials = credentials //set global property
+    println "loading AWS credentials"
+    def credentials = getAwsCredentialsFromConfig()
+    if (!credentials) credentials = getAwsCredentialsFromPropertiesFile()
+    if (!credentials) credentials = getAwsCredentialsFromSystemProperties()
+    awsCredentials = credentials //set global property
+}
+
+/**
+ * @return null if properties not found
+ */
+private AWSCredentials getAwsCredentialsFromConfig() {
+    def accessKey = config.grails?.plugin?.awsElasticBeanstalk?.accessKey
+    def secretKey = config.grails?.plugin?.awsElasticBeanstalk?.secretKey
+    println 'Loading credentials from Config'
+
+    if (!accessKey || !secretKey) return null //TODO log helpful error message
+
+    new BasicAWSCredentials(accessKey, secretKey)
 }
 
 /**
