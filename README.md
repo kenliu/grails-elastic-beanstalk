@@ -79,7 +79,7 @@ Config.groovy:
 
     grails.plugin.awsElasticBeanstalk.applicationName = 'myApplication'
     grails.plugin.awsElasticBeanstalk.environmentName = 'myEnvironment'
-    grails.plugin.awsElasticBeanstalk.templateName = 'default'
+    grails.plugin.awsElasticBeanstalk.configurationTemplateName = 'default'
     grails.plugin.awsElasticBeanstalk.systemProperties = ['property.name.1':'property-value-1', 'property.name.2':'property-value-2']
 
 If the environment 'myEnvironment' does not exist it will be created automatically, the templateName property allows to use a saved configuration for the newly created environment.

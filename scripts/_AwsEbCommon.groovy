@@ -137,8 +137,8 @@ private String getEnvironmentName() {
 }
 
 private String getTemplateName() {
-    def name = config.grails?.plugin?.awsElasticBeanstalk?.configurationName
-    if (!name) name = System.getProperty('awsElasticBeanstalk.configurationName')
+    def name = config.grails?.plugin?.awsElasticBeanstalk?.configurationTemplateName
+    if (!name) name = System.getProperty('awsElasticBeanstalk.configurationTemplateName')
     name ?: 'default'
 }
 
