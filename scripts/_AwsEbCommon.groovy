@@ -58,7 +58,7 @@ target(initTargetApplicationAndEnvironmentConfig: 'Loads application and environ
 	depends(compile, createConfig)
 	applicationName = getApplicationName() //set global
 	environmentName = getEnvironmentName() //set global
-    templateName = getTemplateName() //set global
+    templateName = getConfigurationTemplateName() //set global
 }
 
 /**
@@ -136,7 +136,7 @@ private String getEnvironmentName() {
 	//FIXME this should be unique to account - needs to be truncated? - appname must be between 4 and 23 chars long
 }
 
-private String getTemplateName() {
+private String getConfigurationTemplateName() {
     def name = config.grails?.plugin?.awsElasticBeanstalk?.configurationTemplateName
     if (!name) name = System.getProperty('awsElasticBeanstalk.configurationTemplateName')
     name ?: 'default'
