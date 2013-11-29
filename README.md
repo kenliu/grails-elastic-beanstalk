@@ -48,7 +48,9 @@ In BuildConfig.groovy add the following plugin dependency to the "plugins" secti
 
 ### Plugin Configuration
 
-If you previously created your own Elastic Beanstalk application/environment (prior to these steps), you can configure them in Config.groovy (see "Additional configuration" below). Otherwise no other configuration is required (defaults will be used).
+No additional plugin configuration is required (defaults will be used).
+
+If you previously created your own Elastic Beanstalk application/environment (prior to the steps above), you can configure them in `Config.groovy` (see "Additional configuration" below).
 
 ## Deploying your WAR to Elastic Beanstalk
 
