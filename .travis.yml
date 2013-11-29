@@ -1,3 +1,3 @@
 language: groovy
-script: ./grailsw refresh-dependencies
-     && ./grailsw package-plugin
+script: cd pluginlib && gradle assemble && gradle check && cd .. && ./grailsw refresh-dependencies
+     && ./grailsw test-app
