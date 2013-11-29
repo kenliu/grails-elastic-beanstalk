@@ -15,7 +15,8 @@ TK
 
 In +BuildConfig.groovy+ add the following plugin dependency to the +plugins+ section (with the latest version of the plugin specified):
 
-    build ':aws-elastic-beanstalk:0.2'
+[source,groovy]
+build ':aws-elastic-beanstalk:0.2'
 
 == Configuration
 
