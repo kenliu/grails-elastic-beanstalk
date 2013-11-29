@@ -58,7 +58,7 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
 
     File appWarFile = getAppWarFile(warFileName)
     if(!appWarFile.exists()) {
-        println "Could not find WAR file to upload.  Expected: $appWarFile.absolutePath"
+        println "Could not find WAR file to upload. Expected: $appWarFile.absolutePath"
         exit 1
     }
 
@@ -150,6 +150,8 @@ private uploadToS3(credentials, file, bucketName, key) {
 
     println "Uploading WAR to S3 bucket ${bucketName}"
     AmazonS3 s3 = new AmazonS3Client(credentials)
+
+    //TODO use interactive uploader here
     def s3Result = s3.putObject(bucketName, s3key, file)
     println "Uploaded WAR to S3"
 }
