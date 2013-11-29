@@ -91,12 +91,28 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
     def createApplicationVersionResult = elasticBeanstalk.createApplicationVersion(createApplicationRequest)
     println "Created application version $createApplicationVersionResult"
 
-    //deploy the deployed version to an existing environment
-    println "Updating environment with uploaded application version"
-    def updateEnviromentRequest = new UpdateEnvironmentRequest(environmentName:environmentName, versionLabel:versionLabel)
-    def updateEnviromentResult = elasticBeanstalk.updateEnvironment(updateEnviromentRequest)
-    println "Updated environment $updateEnviromentResult"
+    def environmentExists = elasticBeanstalk.describeEnvironments().getEnvironments().find({
+        it.getEnvironmentName() == environmentName
+    })
 
+    if (environmentExists) {
+        //deploy the deployed version to an existing environment
+        println "Updating environment with uploaded application version"
+        def updateEnviromentRequest = new UpdateEnvironmentRequest(environmentName:environmentName, versionLabel:versionLabel)
+        def updateEnviromentResult = elasticBeanstalk.updateEnvironment(updateEnviromentRequest)
+        println "Updated environment $updateEnviromentResult"
+    } else {
+        println "Creating environment ${environmentName}, configuration template: ${templateName}"
+        def createEnvironmentRequest = new CreateEnvironmentRequest(
+                applicationName: applicationName,
+                environmentName: environmentName,
+                versionLabel: versionLabel,
+                templateName: templateName
+        )
+        println createEnvironmentRequest
+        def createEnvironmentResult = elasticBeanstalk.createEnvironment(createEnvironmentRequest)
+        println "Created environment ${createEnvironmentResult}"
+    }
 }
 
 setDefaultTarget(main)
@@ -109,8 +125,10 @@ private String getDescription() {
 
 private String getVersionLabel(warFile) {
     //TODO provide for alternate algorithms for generating version label
-    //def applicationVersion = metadata.getApplicationVersion()
-    def label = getWarTimestamp(warFile)
+    def label = metadata.getApplicationVersion()
+    if (label.endsWith('SNAPSHOT')) {
+        label = "${label}-${getWarTimestamp(warFile)}"
+    }
     println "version label: ${label}"
     label
 }
