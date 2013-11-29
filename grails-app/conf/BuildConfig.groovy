@@ -27,5 +27,17 @@ grails.project.dependency.resolution = {
         build(":release:3.0.1", ':rest-client-builder:1.0.3') {
             export = false
         }
+        //compile ":codenarc:0.19"
+    }
+}
+
+codenarc.reports = {
+    XmlReport('xml') {
+        outputFile = 'codenarc-report.xml'
+        title = 'CodeNarc Report'
+    }
+    HtmlReport('html') {
+        outputFile = 'codenarc-report.html'
+        title = 'CodeNarc Report'
     }
 }
