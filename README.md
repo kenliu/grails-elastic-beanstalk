@@ -95,10 +95,16 @@ Config.groovy:
 ## Roadmap
 
 
+## Contributing and bug reports
 
-## Contributing
+Pull requests are appreciated! Please report any bugs or suggestions in the Github issue tracker.
 
-Pull requests are appreciated!
+## Contributors
+
+Thanks to:
+* https://github.com/jvdrean
+* https://github.com/alxndrsn
+* https://github.com/burtbeckwith
 
 ## Acknowledgements
 Maikel Alderhout's Blog http://malderhout.wordpress.com/2011/10/10/automate-deployment-from-cloudbees-jenkins-to-amazon-beanstalk/
