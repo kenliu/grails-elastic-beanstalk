@@ -1,5 +1,7 @@
 # Grails Plugin - AWS Elastic Beanstalk Integration
 
+[![Build Status](https://travis-ci.org/kenliu/grails-elastic-beanstalk.png)](https://travis-ci.org/kenliu/grails-elastic-beanstalk)
+
 This plugin provides Grails integration with the AWS Elastic Beanstalk service.
 
 Features Grails scripts for managing AWS Elastic Beanstalk deployments:
