@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Asciidoctor 0.1.3">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide to deploying a Grails application on AWS Elastic Beanstalk</title>
+<link rel="stylesheet" href="./asciidoctor.css">
+</head>
+<body class="article">
+<div id="header">
+<h1>Guide to deploying a Grails application on AWS Elastic Beanstalk</h1>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document covers the basic steps needed to configure a Grails application to run on AWS Elastic Beanstalk.</p>
+</div>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_about_environments">About Environments</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Grails has the concept of "Environments" to distinguish between multiple configurations of an application (e.g. development, test, production). This is not to be confused with the "Environment" concept in Elastic Beanstalk, which represents a runtime container configuration and set of resources. When running in Elastic Beanstalk, typically the Grails environment is "production", which is the default Grails environment used when created a WAR file. The same "production" WAR file may be deployed in multiple Elastic Beanstalk environments.</p>
+</div>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jvm_and_aws_instance_configuration">JVM and AWS instance configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To configure the heap size and PermGen size&#8230;TK</p>
+</div>
+<div class="paragraph">
+<p>By default, the Tomcat container instance provisioned by Elastic Beanstalk will be configured with a heap size of XXX (-xXXX) TK and a PermGen size of XXX.</p>
+</div>
+<div class="paragraph">
+<p>AWS container instances vary in terms of available RAM. Note that the heap size must be smaller than the available memory available for the instance type, since some RAM must be available for operating system.</p>
+</div>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_application_configuration">Application configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Elastic Beanstalk provides a set of default set of application configuration variables named <code>PARAM1-PARAM5</code> that are set in the container and can be read as System properties (as a String):</p>
+</div>
+<div class="literalblock">
+
+<div class="content monospaced">
+<pre>def mySetting = System.getProperty('PARAM1')</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In addition, any number of arbitrary name/value pairs can TK</p>
+</div>
+<div class="paragraph">
+<p>It is recommended to set one of these properties to the external domain TK describe t</p>
+</div>
+<div class="literalblock">
+
+<div class="content monospaced">
+<pre>grails.serverURL = 'http://www.myapplication.com'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>While this not required by Grails, if this property is not set the URL will be detected to be &#8230; and not &#8230;TK</p>
+</div>
+<div class="paragraph">
+<p>TK screenshot here</p>
+</div>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_datasource_configuration">Datasource configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Elastic Beanstalk provides a container configuration setting named <code>JDBC_CONNECTION_STRING</code> that is set as a System property. Unfortunately, Elastic Beanstalk doesn&#8217;t provide any built-in way to manage DB credentials so these should be set as container configuration settings as well.</p>
+</div>
+<div class="paragraph">
+<p><code>DataSource.groovy</code></p>
+</div>
+<div class="literalblock">
+
+<div class="content monospaced">
+<pre>production {
+    dataSource {
+        url = System.getProperty('JDBC_CONNECTION_STRING')
+        username = System.getProperty('PARAM2')
+        password = System.getProperty('PARAM3')
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>TK screenshot of AWS console here</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+
+By default, when creating a WAR (using the "grails war" command), the Grails environment selected is the <code>production</code> environment.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The ElasticBeanstalk</p>
+</div>
+<div class="paragraph">
+<p>See also Configuring and RDS database below</p>
+</div>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_injecting_configuration_for_multiple_environments">Injecting configuration for multiple environments</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_logging_configuration">Logging configuration</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuring_an_rds_database">Configuring an RDS database</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When creating an RDS</p>
+</div>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_additional_container_options">Additional container options</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_additional_configuration">Additional configuration</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tips_and_best_practices_for_running_on_aws_elastic_beanstalk">Tips and Best practices for running on AWS Elastic Beanstalk</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_upgrading_instances_security_patches">Upgrading instances, security patches</h3>
+<div class="paragraph">
+<p>TK discuss OS type (AWS Linux)</p>
+</div>
+
+</div>
+<div class="sect2">
+<h3 id="_about_elastic_beanstalk_pricing">About Elastic Beanstalk pricing</h3>
+<div class="paragraph">
+<p>Elastic Beanstalk is a free service in the sense that there is no additional cost to</p>
+</div>
+
+</div>
+<div class="sect2">
+<h3 id="_aws_service_limits">AWS service limits</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_region_selection">Region selection</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_redundancy">Redundancy</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_rds_read_replicas">RDS read replicas</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_logging">Logging</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_remote_debugging">Remote debugging</h3>
+
+</div>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_securing_elastic_beanstalk_using_iam_roles">Securing Elastic Beanstalk using IAM roles</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Bobby Warner&#8217;s blog post and others</p>
+</div>
+
+</div>
+</div>
+
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-11-28 21:14:04 EST
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Asciidoctor 0.1.3">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grails AWS Elastic Beanstalk plugin command reference</title>
+<link rel="stylesheet" href="./asciidoctor.css">
+</head>
+<body class="article">
+<div id="header">
+<h1>Grails AWS Elastic Beanstalk plugin command reference</h1>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_aws_eb_deploy">aws-eb-deploy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TK</p>
+</div>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_aws_eb_delete_old_versions">aws-eb-delete-old-versions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Deletes the oldest application versions while keeping a specified number of latest versions.</p>
+</div>
+<div class="paragraph">
+<p>AWS Elastic Beanstalk imposes a global 500 application version limit across all applications under the same account. When doing frequent deployments to Elastic Beanstalk such as from a CI server (such as Jenkins), it&#8217;s easy to hit this limit. Any deployments will fail with a <code>TooManyVersionsException</code> from the AWS API, after which you have to manually delete versions to be able to upload any new versions.</p>
+</div>
+<div class="paragraph">
+<p>This script helps to manage this limitation by keeping the maximum number of versions for the target application to a certain threshold.</p>
+</div>
+<div class="paragraph">
+<p>options:
+versions-threshold - number of latest versions to keep
+delete S3 archive - delete the version from S3 (enabled by default)
+TODO allow this to be configured from Grails config</p>
+</div>
+<div class="paragraph">
+<p>future:
+global - delete oldest versions across all applications</p>
+</div>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_aws_eb_stop">aws-eb-stop</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Alias for aws-eb-terminate-environment</p>
+</div>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_aws_eb_terminate_environment">aws-eb-terminate-environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Terminates a running Elastic Beanstalk environment. The target environment is the configured environment name.</p>
+</div>
+
+</div>
+</div>
+
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-11-28 23:47:15 EST
+</div>
+</div>
+</body>
+</html>
