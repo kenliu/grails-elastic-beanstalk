@@ -136,6 +136,9 @@ private String getEnvironmentName() {
 	//FIXME this should be unique to account - needs to be truncated? - appname must be between 4 and 23 chars long
 }
 
+/**
+* The default Elastic Beanstalk ConfigurationTemplate to use when creating a new environment
+*/
 private String getConfigurationTemplateName() {
     def name = config.grails?.plugin?.awsElasticBeanstalk?.configurationTemplateName
     if (!name) name = System.getProperty('awsElasticBeanstalk.configurationTemplateName')
