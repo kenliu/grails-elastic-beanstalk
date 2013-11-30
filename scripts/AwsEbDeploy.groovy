@@ -39,7 +39,7 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
 
     String warFileName
 
-    //configureWarName target doesn't set the warName property since 2.2 (http://bit.ly/17uHfFm)
+    //configureWarName target doesn't set the warName property since Grails 2.2 (http://bit.ly/17uHfFm)
     if (binding.variables.containsKey("warName")) {
         warFileName = warName
     } else {
@@ -62,8 +62,6 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
         exit 1
     }
 
-    //TODO first verify that the target beanstalk environment exists (if application is missing it will get created)
-
     println "Finding S3 bucket to upload WAR"
     //TODO log bucket creation
     String bucketName = elasticBeanstalk.createStorageLocation().getS3Bucket()
@@ -72,7 +70,6 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
     uploadToS3(awsCredentials, appWarFile, bucketName, s3key)
 
     //TODO handle case where application does not yet exist - check application? (don't want to autocreate - disable autocreate flag?)
-    //TODO handle case where target environment does not yet exist - check environment?
 
     //create a new application version
     println "Create application version with uploaded application"
@@ -91,8 +88,9 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
     def createApplicationVersionResult = elasticBeanstalk.createApplicationVersion(createApplicationRequest)
     println "Created application version $createApplicationVersionResult"
 
+    //check if the target beanstalk environment exists (if application is missing it will get created)
     def environmentExists = elasticBeanstalk.describeEnvironments().getEnvironments().find({
-        it.getEnvironmentName() == environmentName
+        it.environmentName == environmentName
     })
 
     if (environmentExists) {
@@ -102,6 +100,7 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
         def updateEnviromentResult = elasticBeanstalk.updateEnvironment(updateEnviromentRequest)
         println "Updated environment $updateEnviromentResult"
     } else {
+        //TODO check for existence of template before creating environment, or catch/handle exception
         println "Creating environment ${environmentName}, configuration template: ${templateName}"
         def createEnvironmentRequest = new CreateEnvironmentRequest(
                 applicationName: applicationName,
@@ -109,9 +108,9 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
                 versionLabel: versionLabel,
                 templateName: templateName
         )
-        println createEnvironmentRequest
+        //println createEnvironmentRequest
         def createEnvironmentResult = elasticBeanstalk.createEnvironment(createEnvironmentRequest)
-        println "Created environment ${createEnvironmentResult}"
+        println "Created environment: ${createEnvironmentResult}"
     }
 }
 
