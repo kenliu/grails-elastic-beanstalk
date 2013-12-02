@@ -18,6 +18,7 @@ import com.amazonaws.auth.*
 import com.amazonaws.services.elasticbeanstalk.*
 import com.amazonaws.services.elasticbeanstalk.model.*
 import com.amazonaws.services.s3.*
+import com.amazonaws.services.s3.model.*
 
 /**
 * @author Kenneth Liu
@@ -125,13 +126,21 @@ private String getWarTimestamp(File warFile) {
 }
 
 private uploadToS3(credentials, file, bucketName, key) {
-    println "Uploading local WAR file ${file.name} to remote WAR file: ${key}"
+    final console = grailsConsole // seems to be necessary so the ProgressListener can access the grailsConsole object
+    console.addStatus "[${new Date()}] Uploading local WAR file ${file.name} to remote WAR file ${key} in bucket ${bucketName}..."
     String s3key = URLEncoder.encode(key, 'UTF-8')
 
-    println "Uploading WAR to S3 bucket ${bucketName}"
     AmazonS3 s3 = new AmazonS3Client(credentials)
-    def s3Result = s3.putObject(bucketName, s3key, file)
-    println "Uploaded WAR to S3"
+    def totalBytesTransferred = 0
+    final fileSize = file.size()
+    console.updateStatus "[${new Date()}] Uploaded 0/${fileSize} bytes..."
+    s3.putObject(new PutObjectRequest(bucketName, s3key, file)
+            .withGeneralProgressListener(new com.amazonaws.event.ProgressListener() {
+                void progressChanged(com.amazonaws.event.ProgressEvent event) {
+                    totalBytesTransferred += event.bytesTransferred
+                    console.updateStatus "[${new Date()}] Uploaded ${totalBytesTransferred}/${fileSize} bytes..."
+                }}))
+    console.addStatus "[${new Date()}] Uploaded WAR to S3."
 }
 
 /**

@@ -12,10 +12,7 @@ grails.project.dependency.resolution = {
     }
 
     dependencies {
-        build ('com.amazonaws:aws-java-sdk:1.5.5') { //this depends on HttpClient 4.1, which seems to clash with HttpClient 4.0 from Grails
-            //export = false
-        }
-        compile ('com.amazonaws:aws-java-sdk:1.5.5') { //this depends on HttpClient 4.1, which seems to clash with HttpClient 4.0 from Grails
+        compile ('com.amazonaws:aws-java-sdk:1.6.7') { //this depends on HttpClient 4.1, which seems to clash with HttpClient 4.0 from Grails
             //export = false
         }
         runtime 'org.yaml:snakeyaml:1.13'
