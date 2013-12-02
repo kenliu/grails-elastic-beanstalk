@@ -4,8 +4,9 @@ import org.yaml.snakeyaml.DumperOptions
 
 eventCreateWarStart = { warName, stagingDir ->
     def config = Holders.config
-    def propertiesMap = config.grails.plugin.awsElasticBeanstalk.systemProperties
-    if(!propertiesMap) {
+    def systemPropertiesMap = config.grails.plugin.awsElasticBeanstalk.systemProperties
+    def jvmPropertiesMap = config.grails.plugin.awsElasticBeanstalk.jvmProperties
+    if(!systemPropertiesMap && !jvmPropertiesMap) {
         return
     }
 
@@ -17,8 +18,13 @@ eventCreateWarStart = { warName, stagingDir ->
     final File ENV_FILE = new File(EXTENSIONS_DIR, 'environments.config')
 
     def ebOptions = []
-    propertiesMap.each { key, value ->
-        ebOptions << [option_name:key, value:value]
+    systemPropertiesMap.each { key, value ->
+        ebOptions << [namespace:'aws:elasticbeanstalk:application:environment',
+		option_name:key, value:value]
+    }
+    jvmPropertiesMap.each { key, value ->
+        ebOptions << [namespace:'aws:elasticbeanstalk:container:tomcat:jvmoptions',
+		option_name:key, value:value]
     }
 
     DumperOptions yamlOptions = new DumperOptions()
