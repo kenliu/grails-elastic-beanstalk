@@ -1,9 +1,17 @@
-
+:imagesdir: assets/img
+:iconsdir: assets/img
+:stylesdir: assets/css
+:scriptsdir: assets/js
 
 == Github stuff
+TK github reop
+TK github issue tracker
 
 == Quick Start
+link:quick-start.html[Quick Start] guide
 
 == Manual
+link:manual.html[User Manual]
 
 == Command Reference
+link:command-reference.html[Command Reference]

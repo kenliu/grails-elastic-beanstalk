@@ -4,8 +4,8 @@
 
 == aws-eb-stop
 
-Alias for aws-eb-terminate-environment
+Alias for +aws-eb-terminate-environment+
 
 == aws-eb-terminate-environment
 
-Terminates a running Elastic Beanstalk environment.
+Terminates a running Elastic Beanstalk environment. The target environment is the configured environment name.
