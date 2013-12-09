@@ -62,11 +62,15 @@ target(initTargetApplicationAndEnvironmentConfig: 'Loads application and environ
 }
 
 target(loadAwsCredentials: 'Load AWS credentials from a file or from env') {
-    println "loading AWS credentials"
+	println "loading AWS credentials"
     def credentials = getAwsCredentialsFromConfig()
     if (!credentials) credentials = getAwsCredentialsFromPropertiesFile()
     if (!credentials) credentials = getAwsCredentialsFromSystemProperties()
-    awsCredentials = credentials //set global property
+	awsCredentials = credentials //set global property
+	if (!credentials) {
+		println "Could not find AWS credentials."
+		exit 1
+	}
 }
 
 /**
