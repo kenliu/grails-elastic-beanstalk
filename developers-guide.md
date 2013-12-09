@@ -1,10 +1,18 @@
 # Developer documentation
 
+## Building the pluginlib jar
+
+TODO explain the reason for the pluginlib jar
+
+	gradle jar
+
 
 
 ## Testing
 
+TODO note about spock tests in pluginlib
 
+	gradle check
 
 ## Writing documentation
 
