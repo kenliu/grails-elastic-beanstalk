@@ -153,6 +153,7 @@ private uploadToS3(credentials, file, bucketName, key) {
     def totalBytesTransferred = 0
     final fileSize = file.size()
     console.updateStatus "[${new Date()}] Uploaded 0/${fileSize} bytes..."
+    //fully qualifying here to avoid conflict with deprecated classes
     s3.putObject(new PutObjectRequest(bucketName, s3key, file)
             .withGeneralProgressListener(new com.amazonaws.event.ProgressListener() {
                 void progressChanged(com.amazonaws.event.ProgressEvent event) {
