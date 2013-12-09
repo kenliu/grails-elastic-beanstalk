@@ -20,6 +20,8 @@ import com.amazonaws.services.elasticbeanstalk.model.*
 import com.amazonaws.services.s3.*
 import com.amazonaws.services.s3.model.*
 
+import net.kenliu.awsebplugin.BeanstalkDeployer
+
 /**
 * @author Kenneth Liu
 */
@@ -31,6 +33,7 @@ includeTargets << new File(awsElasticBeanstalkPluginDir, "scripts/_AwsEbCommon.g
 
 //TODO check what happens on a new installation before plugin is downloaded (breaks with new Grails version?)
 
+deployer = new BeanstalkDeployer()
 
 USAGE = """
 grails aws-eb-deploy
@@ -118,30 +121,17 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
 setDefaultTarget(main)
 
 private String getDescription() {
-    //TODO add customization of description using template
-    //TODO use ISO date format here
-    "Deployed on ${new Date()} from Grails AWS Elastic Beanstalk Plugin"
+    deployer.generateVersionDescription(null)
 }
 
 private String getVersionLabel(warFile) {
-    //TODO provide for alternate algorithms for generating version label
-    def label = metadata.getApplicationVersion()
-    if (label.endsWith('SNAPSHOT')) {
-        label = "${label}-${getWarTimestamp(warFile)}"
-    }
-    println "version label: ${label}"
-    label
+    deployer.generateVersionLabel(null, warFile, metadata.applicationVersion)
 }
 
 private File getAppWarFile(warFilename) {
     //TODO check to make sure that the WAR actually exist
     //println "war file name: ${warFilename}"
     new File(warFilename)
-}
-
-private String getWarTimestamp(File warFile) {
-    def warDate = new Date(warFile.lastModified())
-    warDate.format('yyyy-MM-dd_HH-mm-ss') //same as Jenkins BUILD_ID format
 }
 
 private uploadToS3(credentials, file, bucketName, key) {
@@ -153,6 +143,7 @@ private uploadToS3(credentials, file, bucketName, key) {
     def totalBytesTransferred = 0
     final fileSize = file.size()
     console.updateStatus "[${new Date()}] Uploaded 0/${fileSize} bytes..."
+    //fully qualifying here to avoid conflict with deprecated classes
     s3.putObject(new PutObjectRequest(bucketName, s3key, file)
             .withGeneralProgressListener(new com.amazonaws.event.ProgressListener() {
                 void progressChanged(com.amazonaws.event.ProgressEvent event) {
