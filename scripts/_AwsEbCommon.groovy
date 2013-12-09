@@ -61,10 +61,6 @@ target(initTargetApplicationAndEnvironmentConfig: 'Loads application and environ
     templateName = getConfigurationTemplateName() //set global
 }
 
-/**
- * @author Kenneth Liu
- */
-
 target(loadAwsCredentials: 'Load AWS credentials from a file or from env') {
     println "loading AWS credentials"
     def credentials = getAwsCredentialsFromConfig()
@@ -92,7 +88,7 @@ private AWSCredentials getAwsCredentialsFromConfig() {
 private AWSCredentials getAwsCredentialsFromSystemProperties() {
 	def accessKey = System.getProperty('AWSAccessKeyId')
 	def secretKey = System.getProperty('AWSSecretKey')
-	println 'Loading credentials from System properties'
+	println 'Attempting to load credentials from System properties'
 
 	if (!accessKey || !secretKey) return null //TODO log helpful error message
 
@@ -104,8 +100,8 @@ private AWSCredentials getAwsCredentialsFromSystemProperties() {
 * see: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/usingCLI.html
 */
 private AWSCredentials getAwsCredentialsFromPropertiesFile() {
+	println 'Attempting to load credentials from credential file'
 	def credentialFile = System.getenv('AWS_CREDENTIAL_FILE')
-	println 'Loading credential file from: ' + credentialFile
 
 	if (!credentialFile) return null //TODO log helpful error message
 
