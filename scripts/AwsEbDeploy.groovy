@@ -99,13 +99,15 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
 
     if (environmentExists) {
         //deploy the deployed version to an existing environment
-        println "Updating environment with uploaded application version"
+        println "Updating environment ${environmentName} with uploaded application version"
         def updateEnviromentRequest = new UpdateEnvironmentRequest(environmentName:environmentName, versionLabel:versionLabel)
         def updateEnviromentResult = elasticBeanstalk.updateEnvironment(updateEnviromentRequest)
         println "Updated environment $updateEnviromentResult"
     } else {
         //TODO check for existence of template before creating environment, or catch/handle exception
-        println "Creating environment ${environmentName}, configuration template: ${templateName}"
+        println "Target environment does not exist. Creating environment ${environmentName}, configuration template: ${templateName}"
+
+        //TODO somehow check first that the version label template is valid
         def createEnvironmentRequest = new CreateEnvironmentRequest(
                 applicationName: applicationName,
                 environmentName: environmentName,
@@ -121,11 +123,13 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
 setDefaultTarget(main)
 
 private String getDescription() {
-    deployer.generateVersionDescription(null)
+    def versionDescriptionTemplate = config.grails?.plugin?.awsElasticBeanstalk?.versionDescriptionTemplate
+    deployer.generateVersionDescription(versionDescriptionTemplate)
 }
 
 private String getVersionLabel(warFile) {
-    deployer.generateVersionLabel(null, warFile, metadata.applicationVersion)
+    def versionLabelTemplate = config.grails?.plugin?.awsElasticBeanstalk?.versionLabelTemplate
+    deployer.generateVersionLabel(versionLabelTemplate, warFile, metadata.applicationVersion)
 }
 
 private File getAppWarFile(warFilename) {

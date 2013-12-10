@@ -37,9 +37,10 @@ class BeanstalkDeployerSpec extends Specification {
 	def "should generate description using custom template"() {
 		given:
 		def now = Date.parse('yyyy-MM-dd_HH-mm-ss', '2013-11-27_18-43-33')
+		def template = 'Deployed: ${deploymentDate.toGMTString()}'
 
 		when:
-		def desc = cut.generateVersionDescription('Deployed: ${deploymentDate.toGMTString()}', now)
+		def desc = cut.generateVersionDescription(template, now)
 
 		then:
 		desc == 'Deployed: 27 Nov 2013 23:43:33 GMT'
@@ -56,5 +57,19 @@ class BeanstalkDeployerSpec extends Specification {
 		then:
 		label == '2013-11-27_18-43-33'
 	}
+
+	def "should generate version label using custom template"() {
+		given:
+		def mockWarFile = new Expando()
+		mockWarFile.lastModified = { Date.parse('yyyy-MM-dd_HH-mm-ss', '2013-11-27_18-43-33').time }
+		def template = '''${applicationVersion.endsWith('SNAPSHOT') ? applicationVersion + '-' + warTimestampDate : applicationVersion}'''
+
+		when:
+		def label = cut.generateVersionLabel(template, mockWarFile, '1.2-SNAPSHOT')
+
+		then:
+		label == '1.2-SNAPSHOT-2013-11-27_18-43-33'
+	}
+
 
 }
