@@ -1,12 +1,15 @@
 apply plugin: 'groovy'
+apply plugin: "idea"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile localGroovy() //TODO maybe should use specified groovy version instead?
+    //compile localGroovy() //TODO maybe should use specified groovy version instead?
+	groovy "org.codehaus.groovy:groovy-all:1.8.6"
     compile 'com.amazonaws:aws-java-sdk:1.6.7'
+	testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
 }
 
 libsDirName = '../../lib'
