@@ -20,7 +20,7 @@ import groovy.text.SimpleTemplateEngine
 
 class BeanstalkDeployer {
 
-	String generateVersionDescription(String descriptionTemplate, Date deploymentDate = new Date()) {
+	String generateVersionDescription(descriptionTemplate, Date deploymentDate = new Date()) {
 		//TODO use ISO date format here?
 		def defaultDescriptionTemplate = 'Deployed on ${deploymentDate.toGMTString()} from Grails AWS Elastic Beanstalk Plugin'
 
@@ -29,7 +29,7 @@ class BeanstalkDeployer {
 		new SimpleTemplateEngine().createTemplate(template).make(binding).toString()
 	}
 
-	String generateVersionLabel(String versionLabelTemplate, warFile, applicationVersion) {
+	String generateVersionLabel(versionLabelTemplate, warFile, applicationVersion) {
 		def defaultVersionTemplate = '${warTimestampDate}'
 
 		def template = versionLabelTemplate ?: defaultVersionTemplate

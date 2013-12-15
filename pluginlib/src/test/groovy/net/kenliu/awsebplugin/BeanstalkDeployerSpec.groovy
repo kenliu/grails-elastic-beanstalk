@@ -34,6 +34,18 @@ class BeanstalkDeployerSpec extends Specification {
 		desc == 'Deployed on 27 Nov 2013 23:43:33 GMT from Grails AWS Elastic Beanstalk Plugin'
 	}
 
+	def "should generate description using default template, passing empty map"() {
+		given:
+		def now = Date.parse('yyyy-MM-dd_HH-mm-ss', '2013-11-27_18-43-33')
+
+		when:
+		def desc = cut.generateVersionDescription([:], now)
+
+		then:
+		desc == 'Deployed on 27 Nov 2013 23:43:33 GMT from Grails AWS Elastic Beanstalk Plugin'
+	}
+
+
 	def "should generate description using custom template"() {
 		given:
 		def now = Date.parse('yyyy-MM-dd_HH-mm-ss', '2013-11-27_18-43-33')
@@ -57,6 +69,19 @@ class BeanstalkDeployerSpec extends Specification {
 		then:
 		label == '2013-11-27_18-43-33'
 	}
+
+	def "should generate version label using default template, passing empty map"() {
+		given:
+		def mockWarFile = new Expando()
+		mockWarFile.lastModified = { Date.parse('yyyy-MM-dd_HH-mm-ss', '2013-11-27_18-43-33').time }
+
+		when:
+		def label = cut.generateVersionLabel([:], mockWarFile, '1.2')
+
+		then:
+		label == '2013-11-27_18-43-33'
+	}
+
 
 	def "should generate version label using custom template"() {
 		given:
