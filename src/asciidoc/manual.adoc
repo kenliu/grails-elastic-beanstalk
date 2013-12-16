@@ -21,9 +21,13 @@ See the plugin link:./quick-start.html[Quick Start] guide.
 In +BuildConfig.groovy+ add the following plugin dependency to the +plugins+ section (with the latest version of the plugin specified):
 
 [source,groovy]
-build ':aws-elastic-beanstalk:0.2'
+----
+plugins {
+	build ':aws-elastic-beanstalk:0.3'	
+}
+----
 
-== Configuration
+== Plugin Configuration
 
 === Configuring AWS credentials
 
@@ -61,7 +65,9 @@ http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
 
 For example, to configure the plugin to use the Asia Pacific (Tokyo) Region, add the following to +Config.groovy+:
 
-	grails.plugin.awsElasticBeanstalk.serviceEndpointUrl = 'https://elasticbeanstalk.ap-northeast-1.amazonaws.com'
+[source, groovy]
+grails.plugin.awsElasticBeanstalk.serviceEndpointUrl = 'https://elasticbeanstalk.ap-northeast-1.amazonaws.com'
+
 
 === Configuring the target Elastic Beanstalk application and environment
 
@@ -87,6 +93,18 @@ NOTE: The application name must be between 4 and 23 characters long.
 
 
 == Using an Elastic Beanstalk saved configuration for new environments
+
+When deploying a WAR, if the plugin finds that the target environment does not exist, it will create a new environment using a saved configuration, if specified.
+
+.Configuration options for Elastic Beanstalk saved configuration name
+[options="header"]
+|===
+| Config type | Variable name | Comment |
+| +Config.groovy+ | +grails.plugin.awsElasticBeanstalk.savedConfigurationName+ | |
+| System property | +awsElasticBeanstalk.savedConfigurationName+ | |
+| default | +default+ | |
+|===
+
 
 ==== Defaults
 

@@ -43,8 +43,8 @@ eventCreateWarStart = { warName, stagingDir ->
 * refer to http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customize-containers-ec2.html#customize-containers-format-options
 */
 def generateSettingsConfigYaml(File stagingDir, config) {
-    def systemPropertiesMap = config.grails.plugin.awsElasticBeanstalk.systemProperties
-    def jvmPropertiesMap = config.grails.plugin.awsElasticBeanstalk.jvmProperties
+    def systemPropertiesMap = config.grails.plugin.awsElasticBeanstalk.environmentProperties
+    def jvmPropertiesMap = config.grails.plugin.awsElasticBeanstalk.jvmOptions
     if(!systemPropertiesMap && !jvmPropertiesMap) {
         return
     }
