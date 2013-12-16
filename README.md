@@ -44,7 +44,7 @@ see: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/usingCLI.html
 
 In BuildConfig.groovy add the following plugin dependency (with the latest version of the plugin) to the "plugins" section:
 
-    build ':aws-elastic-beanstalk:0.2'
+    build ':aws-elastic-beanstalk:0.3'
 
 ### Plugin Configuration
 
@@ -81,10 +81,10 @@ Config.groovy:
 
     grails.plugin.awsElasticBeanstalk.applicationName = 'myApplication'
     grails.plugin.awsElasticBeanstalk.environmentName = 'myEnvironment'
-    grails.plugin.awsElasticBeanstalk.configurationTemplateName = 'default'
+    grails.plugin.awsElasticBeanstalk.savedConfigurationName = 'default' //TODO is this the same terminology as in the web interface
     grails.plugin.awsElasticBeanstalk.systemProperties = ['property.name.1':'property-value-1', 'property.name.2':'property-value-2']
 
-If the environment 'myEnvironment' does not exist it will be created automatically, the configurationTemplateName property allows to use a saved configuration for the newly created environment.
+If the environment 'myEnvironment' does not exist it will be created automatically, the savedConfigurationName property allows to use a saved configuration for the newly created environment.
 As an alternative to the AWS Credential File described in a previous section, you can configure the authentication directly in your project configuration file. The credentials can be set directly (not recommended) or passed through system properties (recommended).
 
 Config.groovy:
@@ -110,6 +110,7 @@ Thanks to:
 Maikel Alderhout's Blog http://malderhout.wordpress.com/2011/10/10/automate-deployment-from-cloudbees-jenkins-to-amazon-beanstalk/
 
 ## Version History
+* 0.3 - new user manual, default saved configuration, ebextensions folder, jvm and environment properties, custom version label and description
 * 0.2 - add support for alternate regions, add aws-eb-terminate-environment and aws-eb-stop commands
 * 0.1.1 - fix incompatibility issue with Grails 2.2
 * 0.1 - Initial release - deploy WAR to existing EB environment
