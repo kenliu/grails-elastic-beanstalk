@@ -140,9 +140,9 @@ private String getEnvironmentName() {
 * The default Elastic Beanstalk ConfigurationTemplate to use when creating a new environment
 */
 private String getConfigurationTemplateName() {
-    def name = config.grails?.plugin?.awsElasticBeanstalk?.configurationTemplateName
-    if (!name) name = System.getProperty('awsElasticBeanstalk.configurationTemplateName')
-    name ?: 'default'
+	def name = config.grails?.plugin?.awsElasticBeanstalk?.savedConfigurationName
+	if (!name) name = System.getProperty('awsElasticBeanstalk.savedConfigurationName')
+	name ?: 'default'
 }
 
 private String getEndpointUrl() {
