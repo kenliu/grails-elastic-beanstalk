@@ -75,6 +75,12 @@ to shut down the running environment. Note this will not only shut down the appl
 
 The +aws-eb-stop+ command is an alias for +aws-eb-terminate-environment+
 
+## User Manual
+
+A detailed user manual is available online:
+
+http://kenliu.github.io/grails-elastic-beanstalk/manual.html
+
 ## Additional configuration
 
 Config.groovy:
