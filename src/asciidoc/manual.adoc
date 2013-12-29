@@ -2,7 +2,7 @@
 :iconsdir: assets/img
 :stylesdir: assets/css
 :scriptsdir: assets/js
-
+:linkcss:
 :numbered:
 :toc:
 
@@ -10,7 +10,7 @@
 
 == Introduction
 
-TK
+The AWS Elastic Beanstalk Grails Plugin provides a set of Grails scripts for deploying a Grails application WAR to the AWS Elastic Beanstalk PaaS service.
 
 == Quick Start
 
