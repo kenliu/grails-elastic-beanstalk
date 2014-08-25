@@ -1,9 +1,17 @@
-
-
-== Github stuff
+:imagesdir: assets/img
+:iconsdir: assets/img
+:stylesdir: assets/css
+:scriptsdir: assets/js
 
 == Quick Start
+link:quick-start.html[Quick Start] guide
 
-== Manual
+== Github
+link:https://github.com/kenliu/grails-elastic-beanstalk[github repo]
+link:https://github.com/kenliu/grails-elastic-beanstalk/issues[github issue tracker]
+
+== User Manual
+link:manual.html[User Manual]
 
 == Command Reference
+link:command-reference.html[Command Reference]

@@ -1,0 +1,2 @@
+language: groovy
+script: cd pluginlib && gradle assemble && gradle check

@@ -19,6 +19,7 @@ import com.amazonaws.services.elasticbeanstalk.*
 import com.amazonaws.services.elasticbeanstalk.model.*
 import com.amazonaws.services.s3.*
 import com.amazonaws.services.s3.model.*
+import net.kenliu.awsebplugin.BeanstalkDeployer
 
 /**
 * @author Kenneth Liu
@@ -31,6 +32,7 @@ includeTargets << new File(awsElasticBeanstalkPluginDir, "scripts/_AwsEbCommon.g
 
 //TODO check what happens on a new installation before plugin is downloaded (breaks with new Grails version?)
 
+deployer = new BeanstalkDeployer()
 
 USAGE = """
 grails aws-eb-deploy
@@ -40,7 +42,7 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
 
     String warFileName
 
-    //configureWarName target doesn't set the warName property since 2.2 (http://bit.ly/17uHfFm)
+    //configureWarName target doesn't set the warName property since Grails 2.2 (http://bit.ly/17uHfFm)
     if (binding.variables.containsKey("warName")) {
         warFileName = warName
     } else {
@@ -48,8 +50,8 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
     }
 
     //output global variables coming from Grails scripts
-    println "script metadata: ${metadata}"
-    println "Grails settings warname ${grailsSettings.projectWarFile}"
+    //println "script metadata: ${metadata}"
+    //println "Grails settings warname ${grailsSettings.projectWarFile}"
     println "WAR file name: ${warFileName}"
 
     println 'Starting AWS Elastic Beanstalk deployment'
@@ -59,7 +61,7 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
 
     File appWarFile = getAppWarFile(warFileName)
     if(!appWarFile.exists()) {
-        println "Could not find WAR file to upload.  Expected: $appWarFile.absolutePath"
+        println "Could not find WAR file to upload. Expected: $appWarFile.absolutePath"
         exit 1
     }
 
@@ -71,7 +73,6 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
     uploadToS3(awsCredentials, appWarFile, bucketName, s3key)
 
     //TODO handle case where application does not yet exist - check application? (don't want to autocreate - disable autocreate flag?)
-    //TODO handle case where target environment does not yet exist - check environment?
 
     //create a new application version
     println "Create application version with uploaded application"
@@ -90,28 +91,44 @@ target(main: "Deploy Grails WAR file to AWS Elastic Beanstalk") {
     def createApplicationVersionResult = elasticBeanstalk.createApplicationVersion(createApplicationRequest)
     println "Created application version $createApplicationVersionResult"
 
-    //deploy the deployed version to an existing environment
-    println "Updating environment with uploaded application version"
-    def updateEnviromentRequest = new UpdateEnvironmentRequest(environmentName:environmentName, versionLabel:versionLabel)
-    def updateEnviromentResult = elasticBeanstalk.updateEnvironment(updateEnviromentRequest)
-    println "Updated environment $updateEnviromentResult"
+    //check if the target beanstalk environment exists (if application is missing it will get created)
+    def environmentExists = elasticBeanstalk.describeEnvironments().getEnvironments().find({
+        it.environmentName == environmentName
+    })
 
+    if (environmentExists) {
+        //deploy the deployed version to an existing environment
+        println "Updating environment ${environmentName} with uploaded application version"
+        def updateEnviromentRequest = new UpdateEnvironmentRequest(environmentName:environmentName, versionLabel:versionLabel)
+        def updateEnviromentResult = elasticBeanstalk.updateEnvironment(updateEnviromentRequest)
+        println "Updated environment $updateEnviromentResult"
+    } else {
+        //TODO check for existence of template before creating environment, or catch/handle exception
+        println "Target environment does not exist. Creating environment ${environmentName}, configuration template: ${templateName}"
+
+        //TODO somehow check first that the version label template is valid
+        def createEnvironmentRequest = new CreateEnvironmentRequest(
+                applicationName: applicationName,
+                environmentName: environmentName,
+                versionLabel: versionLabel,
+                templateName: templateName
+        )
+        //println createEnvironmentRequest
+        def createEnvironmentResult = elasticBeanstalk.createEnvironment(createEnvironmentRequest)
+        println "Created environment: ${createEnvironmentResult}"
+    }
 }
 
 setDefaultTarget(main)
 
 private String getDescription() {
-    //TODO add customization of description using template
-    //TODO use ISO date format here
-    "Deployed on ${new Date()} from Grails AWS Elastic Beanstalk Plugin"
+    def versionDescriptionTemplate = config.grails?.plugin?.awsElasticBeanstalk?.versionDescriptionTemplate
+    deployer.generateVersionDescription(versionDescriptionTemplate)
 }
 
 private String getVersionLabel(warFile) {
-    //TODO provide for alternate algorithms for generating version label
-    //def applicationVersion = metadata.getApplicationVersion()
-    def label = getWarTimestamp(warFile)
-    println "version label: ${label}"
-    label
+    def versionLabelTemplate = config.grails?.plugin?.awsElasticBeanstalk?.versionLabelTemplate
+    deployer.generateVersionLabel(versionLabelTemplate, warFile, metadata.applicationVersion)
 }
 
 private File getAppWarFile(warFilename) {
@@ -120,17 +137,13 @@ private File getAppWarFile(warFilename) {
     new File(warFilename)
 }
 
-private String getWarTimestamp(File warFile) {
-    def warDate = new Date(warFile.lastModified())
-    warDate.format('yyyy-MM-dd_HH-mm-ss') //same as Jenkins BUILD_ID format
-}
-
 private uploadToS3(credentials, file, bucketName, key) {
     final console = grailsConsole // seems to be necessary so the ProgressListener can access the grailsConsole object
     console.addStatus "[${new Date()}] Uploading local WAR file ${file.name} to remote WAR file ${key} in bucket ${bucketName}..."
     String s3key = URLEncoder.encode(key, 'UTF-8')
 
     AmazonS3 s3 = new AmazonS3Client(credentials)
+<<<<<<< HEAD
     def totalBytesTransferred = 0
     final fileSize = file.size()
     console.updateStatus "[${new Date()}] Uploaded 0/${fileSize} bytes..."
@@ -140,6 +153,24 @@ private uploadToS3(credentials, file, bucketName, key) {
                     totalBytesTransferred += event.bytesTransferred
                     console.updateStatus "[${new Date()}] Uploaded ${totalBytesTransferred}/${fileSize} bytes..."
                 }}))
+=======
+    if (System.getenv('CI')) {
+        // Do no show progress in console when running CI (otherwise it generates huge log, e.g. in TravisCI it generates an error)
+        s3.putObject(new PutObjectRequest(bucketName, s3key, file))
+    } else {
+        // Show progress in console
+        def totalBytesTransferred = 0
+        final fileSize = file.size()
+        console.updateStatus "[${new Date()}] Uploaded 0/${fileSize} bytes..."
+        //fully qualifying here to avoid conflict with deprecated classes
+        s3.putObject(new PutObjectRequest(bucketName, s3key, file)
+                .withGeneralProgressListener(new com.amazonaws.event.ProgressListener() {
+            void progressChanged(com.amazonaws.event.ProgressEvent event) {
+                totalBytesTransferred += event.bytesTransferred
+                console.updateStatus "[${new Date()}] Uploaded ${totalBytesTransferred}/${fileSize} bytes..."
+            }}))
+    }
+>>>>>>> 43b5dd1b7547f03c8b1008ca327c7a940ec0cbfd
     console.addStatus "[${new Date()}] Uploaded WAR to S3."
 }
 

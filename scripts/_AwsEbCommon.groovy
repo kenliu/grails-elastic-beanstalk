@@ -43,6 +43,8 @@ target(initPlugin: '') {
 target(initElasticBeanstalkClient: 'Create an instance of the Elastic Beanstalk client - AWS credentials required') {
 	depends(initPlugin, loadAwsCredentials, initTargetApplicationAndEnvironmentConfig)
 	println "initializing ElasticBeanstalk client"
+
+	//TODO handle case where credentials are not found
 	elasticBeanstalk = new AWSElasticBeanstalkClient(awsCredentials)
 
 	//setup non-default endpoint URL, if configured
@@ -56,17 +58,32 @@ target(initTargetApplicationAndEnvironmentConfig: 'Loads application and environ
 	depends(compile, createConfig)
 	applicationName = getApplicationName() //set global
 	environmentName = getEnvironmentName() //set global
+    templateName = getConfigurationTemplateName() //set global
 }
-
-/**
-* @author Kenneth Liu
-*/
 
 target(loadAwsCredentials: 'Load AWS credentials from a file or from env') {
 	println "loading AWS credentials"
-	def credentials = getAwsCredentialsFromPropertiesFile()
-	if (!credentials) credentials = getAwsCredentialsFromSystemProperties()
+    def credentials = getAwsCredentialsFromConfig()
+    if (!credentials) credentials = getAwsCredentialsFromPropertiesFile()
+    if (!credentials) credentials = getAwsCredentialsFromSystemProperties()
 	awsCredentials = credentials //set global property
+	if (!credentials) {
+		println "Could not find AWS credentials."
+		exit 1
+	}
+}
+
+/**
+ * @return null if properties not found
+ */
+private AWSCredentials getAwsCredentialsFromConfig() {
+    def accessKey = config.grails?.plugin?.awsElasticBeanstalk?.accessKey
+    def secretKey = config.grails?.plugin?.awsElasticBeanstalk?.secretKey
+    println 'Loading credentials from Config'
+
+    if (!accessKey || !secretKey) return null //TODO log helpful error message
+
+    new BasicAWSCredentials(accessKey, secretKey)
 }
 
 /**
@@ -75,7 +92,7 @@ target(loadAwsCredentials: 'Load AWS credentials from a file or from env') {
 private AWSCredentials getAwsCredentialsFromSystemProperties() {
 	def accessKey = System.getProperty('AWSAccessKeyId')
 	def secretKey = System.getProperty('AWSSecretKey')
-	println 'Loading credentials from System properties'
+	println 'Attempting to load credentials from System properties'
 
 	if (!accessKey || !secretKey) return null //TODO log helpful error message
 
@@ -87,8 +104,8 @@ private AWSCredentials getAwsCredentialsFromSystemProperties() {
 * see: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/usingCLI.html
 */
 private AWSCredentials getAwsCredentialsFromPropertiesFile() {
+	println 'Attempting to load credentials from credential file'
 	def credentialFile = System.getenv('AWS_CREDENTIAL_FILE')
-	println 'Loading credential file from: ' + credentialFile
 
 	if (!credentialFile) return null //TODO log helpful error message
 
@@ -117,6 +134,15 @@ private String getEnvironmentName() {
 	if (!name) name = System.getProperty('awsElasticBeanstalk.environmentName')
 	name ?: metadata.'app.name' + '-default' //the name of the default environment used in the AWS Console
 	//FIXME this should be unique to account - needs to be truncated? - appname must be between 4 and 23 chars long
+}
+
+/**
+* The default Elastic Beanstalk ConfigurationTemplate to use when creating a new environment
+*/
+private String getConfigurationTemplateName() {
+	def name = config.grails?.plugin?.awsElasticBeanstalk?.savedConfigurationName
+	if (!name) name = System.getProperty('awsElasticBeanstalk.savedConfigurationName')
+	name ?: 'default'
 }
 
 private String getEndpointUrl() {

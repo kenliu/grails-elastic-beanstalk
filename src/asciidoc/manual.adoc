@@ -1,31 +1,59 @@
-:imagesdir: ./assets/img
-:iconsdir: ./assets/img
-:stylesdir: ./assets/css
-:scriptsdir: ./assets/js
-
+:imagesdir: assets/img
+:iconsdir: assets/img
+:stylesdir: assets/css
+:scriptsdir: assets/js
+:linkcss:
 :numbered:
+:toc:
 
 = AWS Elastic Beanstalk Grails Plugin documentation
 
 == Introduction
 
+The AWS Elastic Beanstalk Grails Plugin provides a set of Grails scripts for deploying a Grails application WAR to the AWS Elastic Beanstalk PaaS service.
+
+== Quick Start
+
+See the plugin link:./quick-start.html[Quick Start] guide.
+
 == Installation
 
-In BuildConfig.groovy add the following plugin dependency to the "plugins" section (with the latest version of the plugin specified):
+In +BuildConfig.groovy+ add the following plugin dependency to the +plugins+ section (with the latest version of the plugin specified):
 
-    build ':aws-elastic-beanstalk:0.2'
+[source,groovy]
+----
+plugins {
+	build ':aws-elastic-beanstalk:0.3'	
+}
+----
 
-== Configuration
+== Plugin Configuration
 
 === Configuring AWS credentials
 
+[options="header"]
+|===
+| Config type | Variable name | Comment |
+| +Config.groovy+ | +grails.plugin.awsElasticBeanstalk.awsAccessKeyId+ +grails.plugin.awsElasticBeanstalk.awsAccessKeyId+ |
+| System properties | +AWSAccessKeyId+ +AWSSecretKey+ |
+| Environment variable | +AWS_CREDENTIAL_FILE+ | path to credentials file, compatible with AWS CLI tool |
+|===
+
+see: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/usingCLI.html
+
+TK warning about storing AWS credentials
+WARNING: secure this key!
+
+TK sample config file here
+
+	AWSAccessKeyId=
+	AWSSecretKey=
+
 === Using a non-default AWS region
 
-By default, the Elastic Beanstalk plugin uses the US-East (Northern Virginia) AWS Region (+us-east-1+). To select a diferent target region, configure a different AWS Elastic Beanstalk service endpoint using one of the available endpoints listed here:
+By default, the Elastic Beanstalk plugin uses the US-East (Northern Virginia) AWS Region (+us-east-1+). To use a different region, configure the AWS Elastic Beanstalk service endpoint using one of the endpoint URLs listed in the AWS reference docs:
 
 http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
-
-To configure the plugin to use an alternate service endpoint, specify the 
 
 [options="header"]
 |===
@@ -37,7 +65,9 @@ To configure the plugin to use an alternate service endpoint, specify the
 
 For example, to configure the plugin to use the Asia Pacific (Tokyo) Region, add the following to +Config.groovy+:
 
-	grails.plugin.awsElasticBeanstalk.serviceEndpointUrl = 'https://elasticbeanstalk.ap-northeast-1.amazonaws.com'
+[source, groovy]
+grails.plugin.awsElasticBeanstalk.serviceEndpointUrl = 'https://elasticbeanstalk.ap-northeast-1.amazonaws.com'
+
 
 === Configuring the target Elastic Beanstalk application and environment
 
@@ -62,6 +92,20 @@ NOTE: The application name must be between 4 and 23 characters long.
 |===
 
 
+== Using an Elastic Beanstalk saved configuration for new environments
+
+When deploying a WAR, if the plugin finds that the target environment does not exist, it will create a new environment using a saved configuration, if specified.
+
+.Configuration options for Elastic Beanstalk saved configuration name
+[options="header"]
+|===
+| Config type | Variable name | Comment |
+| +Config.groovy+ | +grails.plugin.awsElasticBeanstalk.savedConfigurationName+ | |
+| System property | +awsElasticBeanstalk.savedConfigurationName+ | |
+| default | +default+ | |
+|===
+
+
 ==== Defaults
 
 TK document default application/environment name
@@ -71,12 +115,14 @@ TK discuss default JVM settings / container settings
 
 == Stopping an environment
 
-The +aws-eb-stop+ command (alias for +aws-eb-terminate-environment+) will terminate the 
+The +aws-eb-stop+ command (alias for +aws-eb-terminate-environment+) will terminate all running instances for an environment and deleting the associated AWS resources.
 
-Elastic Beanstalk does not currently provide any way to stop a running application without terminating the container.
+TK link to AWS docs here
 
+Unfortunately, Elastic Beanstalk does not currently provide any way to stop a running application without terminating all instances.
+
+TK add warning callout here
 If you have created other AWS resources tied to the Elastic Beanstalk environment (such as a CloudFront distribution), these may prevent the environment from terminating successfully and will need to be cleaned up separately.
-
 
 == Elastic Beanstalk configuration
 
