@@ -143,17 +143,6 @@ private uploadToS3(credentials, file, bucketName, key) {
     String s3key = URLEncoder.encode(key, 'UTF-8')
 
     AmazonS3 s3 = new AmazonS3Client(credentials)
-<<<<<<< HEAD
-    def totalBytesTransferred = 0
-    final fileSize = file.size()
-    console.updateStatus "[${new Date()}] Uploaded 0/${fileSize} bytes..."
-    s3.putObject(new PutObjectRequest(bucketName, s3key, file)
-            .withGeneralProgressListener(new com.amazonaws.event.ProgressListener() {
-                void progressChanged(com.amazonaws.event.ProgressEvent event) {
-                    totalBytesTransferred += event.bytesTransferred
-                    console.updateStatus "[${new Date()}] Uploaded ${totalBytesTransferred}/${fileSize} bytes..."
-                }}))
-=======
     if (System.getenv('CI')) {
         // Do no show progress in console when running CI (otherwise it generates huge log, e.g. in TravisCI it generates an error)
         s3.putObject(new PutObjectRequest(bucketName, s3key, file))
@@ -170,7 +159,6 @@ private uploadToS3(credentials, file, bucketName, key) {
                 console.updateStatus "[${new Date()}] Uploaded ${totalBytesTransferred}/${fileSize} bytes..."
             }}))
     }
->>>>>>> 43b5dd1b7547f03c8b1008ca327c7a940ec0cbfd
     console.addStatus "[${new Date()}] Uploaded WAR to S3."
 }
 
