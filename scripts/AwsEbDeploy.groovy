@@ -19,7 +19,6 @@ import com.amazonaws.services.elasticbeanstalk.*
 import com.amazonaws.services.elasticbeanstalk.model.*
 import com.amazonaws.services.s3.*
 import com.amazonaws.services.s3.model.*
-
 import net.kenliu.awsebplugin.BeanstalkDeployer
 
 /**

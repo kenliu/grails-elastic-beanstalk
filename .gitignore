@@ -17,6 +17,7 @@
 
 # plugin release file
 /*.zip
+/*.pom
 plugin.xml
 
 # "temporary" build files

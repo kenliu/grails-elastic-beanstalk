@@ -20,7 +20,7 @@ http://kenliu.github.io/grails-elastic-beanstalk/manual.html
 
 ## Additional configuration
 
-Config.groovy:
+### Config.groovy:
 
     grails.plugin.awsElasticBeanstalk.applicationName = 'myApplication'
     grails.plugin.awsElasticBeanstalk.environmentName = 'myEnvironment'
@@ -30,10 +30,15 @@ Config.groovy:
 If the environment 'myEnvironment' does not exist it will be created automatically, the savedConfigurationName property allows to use a saved configuration for the newly created environment.
 As an alternative to the AWS Credential File described in a previous section, you can configure the authentication directly in your project configuration file. The credentials can be set directly (not recommended) or passed through system properties (recommended).
 
-Config.groovy:
+### Config.groovy:
 
     grails.plugin.awsElasticBeanstalk.accessKey = System.getProperty('BEANSTALK_ACCESS_KEY')
     grails.plugin.awsElasticBeanstalk.secretKey = System.getProperty('BEANSTALK_SECRET_KEY')
+
+### src/ebextensions/\*.config
+
+Any config files added to the `src/ebextensions` are added to the `.ebextensions` directory at the top-level of the generated WAR file.
+These are either YAML or JSON formatted files, as detailed at http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customize-containers.html.
 
 ## Roadmap
 
